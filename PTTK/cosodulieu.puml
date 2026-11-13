@@ -18,11 +18,6 @@ entity Customer4 {
   --
   customerId : varchar(255)
 }
-entity LoyalCustomer4 {
-  * Customer4Member4id : integer(10) <<PK, FK>>
-  --
-  loyalCustomerId : varchar(255)
-}
 entity MembershipCard4 {
   * id : integer(10) <<PK>>
   --
@@ -87,7 +82,6 @@ entity Invoice4 {
 
 Member4 ||--o| Customer4
 Member4 ||--o| Employee4
-Customer4 ||--o| LoyalCustomer4
 Customer4 ||..o{ MembershipCard4
 ScreeningRoom4 ||..o{ Showtime4
 ScreeningRoom4 ||..o{ Seat4

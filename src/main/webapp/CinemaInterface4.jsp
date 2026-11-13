@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>1. Cinema Interface 4</title>
+    <title>Cinema Interface 4</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 30px; }
         .container { border: 2px solid #000; width: 750px; padding: 15px; margin: 0 auto; }
@@ -28,7 +28,7 @@
     <div class="main-layout">
         <div class="sidebar">
             <a href="#" class="sidebar-btn">Quản lí lịch chiếu</a>
-            <a href="ManageMovieInterface4.jsp" class="sidebar-btn active">Quản lí phim</a>
+            <a href="${pageContext.request.contextPath}/manage-movies" class="sidebar-btn active">Quản lí phim</a>
             <a href="#" class="sidebar-btn">Quản lí phòng chiếu</a>
             <a href="#" class="sidebar-btn" style="border-bottom: none;">Thống kê</a>
         </div>

@@ -36,7 +36,6 @@ package "model" {
     class Manager4
     class SaleStaff4
     class Customer4
-    class LoyalCustomer4
     class MembershipCard4
     class Movie4
     class ScreeningRoom4

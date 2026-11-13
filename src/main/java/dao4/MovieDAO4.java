@@ -13,7 +13,7 @@ public class MovieDAO4 extends DAO {
     }
 
     public boolean addMovie4(Movie4 movie) {
-        String sql = "INSERT INTO Movie4 (movieId, movieName, description, genre, duration) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO tblMovie4 (movieId, movieName, description, genre, duration) VALUES (?, ?, ?, ?, ?)";
         try {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, movie.getMovieId());
@@ -32,7 +32,7 @@ public class MovieDAO4 extends DAO {
 
     public List<Movie4> getAllMovies() {
         List<Movie4> list = new ArrayList<>();
-        String sql = "SELECT * FROM Movie4";
+        String sql = "SELECT * FROM tblMovie4";
         try {
             PreparedStatement ps = con.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
@@ -52,7 +52,7 @@ public class MovieDAO4 extends DAO {
     }
 
     public Movie4 getMovieById(String movieId) {
-        String sql = "SELECT * FROM Movie4 WHERE movieId = ?";
+        String sql = "SELECT * FROM tblMovie4 WHERE movieId = ?";
         try {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, movieId);
@@ -73,7 +73,7 @@ public class MovieDAO4 extends DAO {
     }
 
     public boolean updateMovie(Movie4 movie) {
-        String sql = "UPDATE Movie4 SET movieName=?, description=?, genre=?, duration=? WHERE movieId=?";
+        String sql = "UPDATE tblMovie4 SET movieName=?, description=?, genre=?, duration=? WHERE movieId=?";
         try {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, movie.getMovieName());
@@ -89,7 +89,7 @@ public class MovieDAO4 extends DAO {
     }
 
     public boolean deleteMovie(String movieId) {
-        String sql = "DELETE FROM Movie4 WHERE movieId=?";
+        String sql = "DELETE FROM tblMovie4 WHERE movieId=?";
         try {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, movieId);

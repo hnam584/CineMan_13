@@ -19,9 +19,6 @@ class SaleStaff4
 class Customer4 {
      -customerId : String 
      }
-class LoyalCustomer4 {
-     -loyalCustomerId : String 
-     }
 class MembershipCard4 {
   -cardId : String
   -issueDate : Date
@@ -87,7 +84,6 @@ Employee4 --|> Member4
 Customer4 --|> Member4
 Manager4 --|> Employee4
 SaleStaff4 --|> Employee4
-LoyalCustomer4 --|> Customer4
 CustomerStatistic4 --|> Customer4
 MovieStatistic4 --|> Movie4
 RevenueStatistic4 --|> Invoice4

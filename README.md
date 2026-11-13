@@ -51,8 +51,11 @@ Dự án được thực hiện theo quy trình:
 
 - ✅ Thêm phim mới vào hệ thống.
 - ✅ Hiển thị danh sách phim.
+- ✅ Mua vé trực tuyến: chọn phim → chọn suất chiếu → chọn ghế → thanh toán → xuất vé và hóa đơn.
+- ✅ Áp dụng ưu đãi 10% khi nhập mã thẻ thành viên hợp lệ.
+- ✅ Lưu hóa đơn và danh sách vé trong cùng một transaction.
 - ✅ Kết nối MySQL và thao tác dữ liệu qua JDBC/DAO.
-- ✅ Giao diện quản lý phim cơ bản bằng JSP.
+- ✅ Giao diện quản lý phim và mua vé bằng JSP.
 
 ### Đã phân tích – thiết kế
 
@@ -64,9 +67,9 @@ Dự án được thực hiện theo quy trình:
 
 ### Đang phát triển
 
-- 🚧 Hoàn thiện module mua vé trực tuyến ở tầng code.
 - 🚧 Chức năng sửa và xóa phim.
 - 🚧 Đăng nhập và phân quyền người dùng.
+- 🚧 Kiểm thử tự động cho luồng mua vé.
 
 ---
 
@@ -96,9 +99,10 @@ flowchart LR
     D --> M[(MySQL<br/>cineman_db)]
 ```
 
-- **View:** các trang JSP (`CinemaInterface4.jsp`, `ManageMovieInterface4.jsp`, `AddMovieInterface4.jsp`).
-- **DAO:** `DAO`, `MovieDAO4` – chịu trách nhiệm kết nối và thao tác CSDL.
-- **Model:** `Member4`, `Employee4`, `Manager4`, `Movie4`.
+- **Controller:** các Servlet trong `servlet4` (`MovieListServlet`, `MovieAddServlet`, `MovieCatalogServlet`, `ShowtimeServlet`, `SeatServlet`, `PaymentServlet`, `InvoiceServlet`).
+- **View:** các trang JSP dùng JSTL/EL. Giao diện quản lý bắt đầu từ `CinemaInterface4.jsp`; giao diện khách hàng bắt đầu từ `CustomerInterface4.jsp`. Luồng mua vé gồm `ListMovieInterface4.jsp` → `ShowtimeInterface4.jsp` → `SeatInterface4.jsp` → `PaymentInterface4.jsp` → `ExportInvoiceInterface4.jsp`.
+- **DAO:** `DAO`, `MovieDAO4`, `ShowtimeDAO4`, `ScreeningRoomDAO4`, `SeatDAO4`, `MembershipCardDAO4`, `TicketDAO4`, `InvoiceDAO4`.
+- **Model:** `Member4`, `Employee4`, `Manager4`, `Customer4`, `SaleStaff4`, `Movie4`, `ScreeningRoom4`, `Showtime4`, `Seat4`, `Ticket4`, `Invoice4`, `MembershipCard4`.
 
 > Định hướng phát triển: tách tầng điều khiển bằng Servlet, áp dụng mô hình MVC đầy đủ và sử dụng connection pool.
 
@@ -110,24 +114,55 @@ flowchart LR
 CineMan13/
 ├── pom.xml
 ├── README.md
+├── database/
+│   └── cineman.sql
 ├── src/
 │   └── main/
 │       ├── java/
+│       │   ├── servlet4/
+│       │   │   ├── MovieListServlet.java
+│       │   │   ├── MovieAddServlet.java
+│       │   │   ├── MovieCatalogServlet.java
+│       │   │   ├── ShowtimeServlet.java
+│       │   │   ├── SeatServlet.java
+│       │   │   ├── PaymentServlet.java
+│       │   │   └── InvoiceServlet.java
 │       │   ├── dao4/
 │       │   │   ├── DAO.java
-│       │   │   └── MovieDAO4.java
+│       │   │   ├── MovieDAO4.java
+│       │   │   ├── ShowtimeDAO4.java
+│       │   │   ├── ScreeningRoomDAO4.java
+│       │   │   ├── SeatDAO4.java
+│       │   │   ├── MembershipCardDAO4.java
+│       │   │   ├── TicketDAO4.java
+│       │   │   └── InvoiceDAO4.java
 │       │   └── model4/
 │       │       ├── Member4.java
 │       │       ├── Employee4.java
 │       │       ├── Manager4.java
-│       │       └── Movie4.java
+│       │       ├── Customer4.java
+│       │       ├── SaleStaff4.java
+│       │       ├── Movie4.java
+│       │       ├── ScreeningRoom4.java
+│       │       ├── Showtime4.java
+│       │       ├── Seat4.java
+│       │       ├── Ticket4.java
+│       │       ├── Invoice4.java
+│       │       └── MembershipCard4.java
 │       ├── resources/
+│       │   ├── db.properties.example
 │       │   └── META-INF/
 │       │       └── persistence.xml
 │       └── webapp/
 │           ├── CinemaInterface4.jsp
+│           ├── CustomerInterface4.jsp
 │           ├── ManageMovieInterface4.jsp
 │           ├── AddMovieInterface4.jsp
+│           ├── ListMovieInterface4.jsp
+│           ├── ShowtimeInterface4.jsp
+│           ├── SeatInterface4.jsp
+│           ├── PaymentInterface4.jsp
+│           ├── ExportInvoiceInterface4.jsp
 │           └── WEB-INF/
 │               ├── web.xml
 │               └── beans.xml
@@ -164,26 +199,19 @@ cd CineMan13
 
 ### 3. Tạo cơ sở dữ liệu
 
-Chạy script trong MySQL:
+Chạy script có sẵn:
 
-```sql
-CREATE DATABASE cineman_db
-  CHARACTER SET utf8mb4
-  COLLATE utf8mb4_unicode_ci;
-
-USE cineman_db;
-
-CREATE TABLE Movie4 (
-    id          INT AUTO_INCREMENT PRIMARY KEY,
-    movieId     VARCHAR(255) NOT NULL UNIQUE,
-    movieName   VARCHAR(255) NOT NULL,
-    description TEXT,
-    genre       VARCHAR(255),
-    duration    INT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```bash
+mysql -u root -p < database/cineman.sql
 ```
 
-> Có thể bổ sung các bảng `Member4`, `Employee4`, `Customer4`, `ScreeningRoom4`, `Showtime4`, `Seat4`, `Ticket4`, `Invoice4`, `MembershipCard4` theo sơ đồ CSDL trong thư mục `PTTK/`.
+Script sẽ tạo database `cineman_db`, toàn bộ bảng `tbl...4` và dữ liệu mẫu:
+
+- 2 phim, 2 phòng chiếu, 30 ghế.
+- 3 suất chiếu.
+- 1 khách hàng demo (`C001`) và thẻ thành viên `LOYAL001`.
+
+> Nếu đã có bảng `Movie4` từ phiên bản cũ, script sẽ tạo lại thành `tblMovie4`. Dữ liệu cũ trong `Movie4` không tự động chuyển sang; cần migrate thủ công nếu muốn giữ.
 
 ### 4. Cấu hình kết nối CSDL
 
@@ -232,6 +260,18 @@ http://localhost:8080/CineManApp-1.0-SNAPSHOT/CinemaInterface4.jsp
 ### 7. Chạy bằng NetBeans
 
 Mở project bằng NetBeans, cấu hình Tomcat 10.1+ và MySQL, sau đó chọn **Run Project**.
+
+- Giao diện nhân viên quản lý:
+
+```text
+http://localhost:8080/CineMan13/CinemaInterface4.jsp
+```
+
+- Giao diện khách hàng:
+
+```text
+http://localhost:8080/CineMan13/CustomerInterface4.jsp
+```
 
 ---
 
@@ -291,7 +331,7 @@ Các biểu đồ UML có thể xem bằng:
 | Phân tích hệ thống | 🟡 Cơ bản hoàn thành |
 | Thiết kế hệ thống | 🟡 Cơ bản hoàn thành |
 | Cài đặt module quản lý phim | ✅ Hoàn thành |
-| Cài đặt module mua vé trực tuyến | 🚧 Đang phát triển |
+| Cài đặt module mua vé trực tuyến | ✅ Đã cài đặt (demo) |
 | Kiểm thử | ⏳ Chưa thực hiện |
 
 ---
@@ -299,7 +339,8 @@ Các biểu đồ UML có thể xem bằng:
 ## 🔮 Hướng phát triển
 
 - [ ] Hoàn thiện chức năng sửa và xóa phim.
-- [ ] Hoàn thiện module mua vé trực tuyến.
+- [x] Hoàn thiện module mua vé trực tuyến.
+- [ ] Thêm kiểm thử cho luồng mua vé và xử lý tranh chấp ghế.
 - [ ] Xây dựng chức năng đăng nhập, đăng xuất và phân quyền.
 - [ ] Bổ sung quản lý phòng chiếu, lịch chiếu và thống kê.
 - [ ] Chuyển các xử lý JSP scriptlet sang Servlet/Controller.

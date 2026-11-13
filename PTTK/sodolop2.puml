@@ -12,8 +12,6 @@ class Member4 {
 }
 class Customer4 {
      -customerId : String }
-class LoyalCustomer4 {
- -loyalCustomerId : String }
 
 class "CinemaInterface4.jsp" as CinemaInterface4 {
   -subManageMovieInformation4 : submit
@@ -141,7 +139,6 @@ class Invoice4 {
 }
 
 Customer4 --|> Member4
-LoyalCustomer4 --|> Customer4
 
 MovieDAO4 --|> DAO
 ShowtimeDAO4 --|> DAO

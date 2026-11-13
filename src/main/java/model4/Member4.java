@@ -3,6 +3,7 @@ package model4;
 import java.util.Date;
 
 public class Member4 {
+    private int id;
     private String username;
     private String password;
     private String fullName;
@@ -12,6 +13,9 @@ public class Member4 {
     private String address;
 
     public Member4() {}
+
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
     public Member4(String username, String password, String fullName, Date dateOfBirth, String email, String phone, String address) {
         this.username = username;
