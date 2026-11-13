@@ -1,0 +1,181 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class Member4 {
+  -username : String
+  -password : String
+  -fullName : String
+  -dateOfBirth : Date
+  -email : String
+  -phone : String
+  -address : String
+}
+class Customer4 {
+     -customerId : String }
+class LoyalCustomer4 {
+ -loyalCustomerId : String }
+
+class "CinemaInterface4.jsp" as CinemaInterface4 {
+  -subManageMovieInformation4 : submit
+  -subManageShowTime4 : submit
+  -subManageScreeningRoom4 : submit
+  -subViewStatistic4 : submit
+}
+class "ListMovieInterface4.jsp" as ListMovieInterface4 {
+  -tblListMovies4 : Table
+  -subSelectMovie4 : submit
+  -subBack : sub
+}
+class "ShowtimeInterface4.jsp" as ShowtimeInterface4 {
+  -tblShowtimes4 : Table
+  -subSelectShowtime4 : submit
+  -subBack : sub
+}
+class "SeatInterface4.jsp" as SeatInterface4 {
+  -tblSeat4 : Table
+  -inLoyalCustomerId : string
+  -subPurchaseConfirm : submit
+  -subSelectSeat4 : submit
+  -subBack : sub
+}
+class "PaymentInterface4.jsp" as PaymentInterface4 {
+  -outPaymentId : string
+  -outEnterPaymentId : string
+  -subPaymentConfirm : submit
+  -subBack : sub
+}
+class "ExportInvoiceInterface4.jsp" as ExportInvoiceInterface4 {
+  -outTicket : string
+  -outInvoice : string
+  -subPrintInvoice : submit
+}
+
+class DAO {
+  -con : Connection()
+  +DAO()
+}
+class MovieDAO4 {
+  +MovieDAO4()
+  +addMovie4(movie : Movie4) : boolean
+  +getMovieById(movieId : String) : Movie4
+  +updateMovie4(movie : Movie4) : boolean
+  +deleteMovie4(movie : Movie4) : boolean
+  +getAllMovies4() : List<Movie4>
+}
+class ShowtimeDAO4 {
+  +ShowtimeDAO4()
+  +getShowtimesByMovie4(movieId : String) : List<Showtime4>
+  +addShowtime4(showtime : Showtime4) : boolean
+  +updateShowtime4(showtime : Showtime4) : boolean
+}
+class ScreeningroomDAO4 {
+  +ScreeningroomDAO4()
+  +getRoomById4(id : String) : ScreeningRoom4
+  +addRoom4(room : ScreeningRoom4) : boolean
+}
+class SeatDAO4 {
+  +SeatDAO4()
+  +getSeatsByRoom4(roomId : String) : List<Seat4>
+  +updateSeatStatus4(seatId : String, status : String) : boolean
+}
+class TicketDAO4 {
+  +TicketDAO4()
+  +calculatePrice4() : float()
+  +addTicket4() : Ticket4
+}
+class InvoiceDAO4 {
+  +InvoiceDAO4()
+  +addInvoice4(invoice : Invoice4) : boolean
+  +createInvoice4(invoice : Invoice4) : boolean()
+  +printInvoice4() : void()
+}
+
+class Movie4 {
+  -movieId : String
+  -movieName : String
+  -genre : String
+  -duration : int
+  -description : String
+  +addMovie4(movie : Movie4) : boolean
+  +updateMovie4(movie : Movie4) : boolean
+  +deleteMovie4(movieId : String) : boolean()
+  +getMovieById4(movieId : String) : Movie4()
+  +getAllMovies4() : List<Movie4>
+}
+class Showtime4 {
+  -showtimeId : String
+  -startTime : Date
+  -endTime : Date
+  +getShowtimesByMovie4(movieId : String) : List<Showtime4>
+  +addShowtime4(showtime : Showtime4) : boolean()
+  +updateShowtime4(showtime : Showtime4) : boolean()
+}
+class ScreeningRoom4 {
+  -roomId : String
+  -capacity : integer
+  +getRoomById4(roomId : String) : ScreeningRoom4()
+  +addRoom4(room : ScreeningRoom4) : boolean()
+}
+class Seat4 {
+  -seatId : String
+  -status : String
+  +getSeatsByRoom4(roomId : String) : List<Seat4>
+  +updateSeatStatus4(seatId : String, status : String) : boolean
+}
+class Ticket4 {
+  -ticketId : String
+  -price : float
+  -showtime : Showtime4
+  -seat : Seat4
+  +calculatePrice4() : float()
+  +addTicket4() : Ticket4
+}
+class Invoice4 {
+  -invoiceId : String
+  -totalAmount : float
+  -tickets : Ticket4[]
+  -customer : Customer4
+  +calculateTotalAmount4(tickets : List<Ticket4>) : boolean
+  +printInvoice4() : void()
+  +addInvoice4(invoice : Invoice4) : boolean
+}
+
+Customer4 --|> Member4
+LoyalCustomer4 --|> Customer4
+
+MovieDAO4 --|> DAO
+ShowtimeDAO4 --|> DAO
+ScreeningroomDAO4 --|> DAO
+SeatDAO4 --|> DAO
+TicketDAO4 --|> DAO
+InvoiceDAO4 --|> DAO
+
+Customer4 -- CinemaInterface4
+CinemaInterface4 -- ListMovieInterface4
+ListMovieInterface4 -- ShowtimeInterface4
+ShowtimeInterface4 -- SeatInterface4
+SeatInterface4 -- PaymentInterface4
+PaymentInterface4 -- ExportInvoiceInterface4
+
+ListMovieInterface4 -- MovieDAO4
+ShowtimeInterface4 -- ShowtimeDAO4
+SeatInterface4 -- SeatDAO4
+SeatInterface4 -- ScreeningroomDAO4
+PaymentInterface4 -- InvoiceDAO4
+ExportInvoiceInterface4 -- InvoiceDAO4
+
+MovieDAO4 -- Movie4
+ShowtimeDAO4 -- Showtime4
+ScreeningroomDAO4 -- ScreeningRoom4
+SeatDAO4 -- Seat4
+TicketDAO4 -- Ticket4
+InvoiceDAO4 -- Invoice4
+
+Showtime4 o-- Movie4
+Showtime4 o-- ScreeningRoom4
+Ticket4 o-- Showtime4
+Ticket4 o-- Seat4
+ScreeningRoom4 *-- Seat4
+Invoice4 *-- Ticket4
+Invoice4 o-- Customer4
+@enduml

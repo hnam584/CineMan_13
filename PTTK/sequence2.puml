@@ -1,0 +1,152 @@
+@startuml
+skinparam style strictuml
+skinparam sequenceMessageAlign center
+skinparam monochrome true
+autonumber "<b>0:"
+
+actor "Customer4" as Actor
+boundary "CinemaInterface4" as UI_Home
+boundary "PurchaseTicketInterface4" as UI_Movie
+boundary "ShowtimeInterface4" as UI_Showtime
+boundary "SeatInterface4" as UI_Seat
+boundary "PaymentInterface4" as UI_Pay
+boundary "ExportInvoiceAndTicketInterface4" as UI_Export
+
+control "Movie4DAO" as DAO_Movie
+control "Showtime4DAO" as DAO_Showtime
+control "Seat4DAO" as DAO_Seat
+control "Invoice4DAO" as DAO_Invoice
+
+entity "Movie4" as E_Movie
+entity "Showtime4" as E_Showtime
+entity "Seat4" as E_Seat
+entity "Ticket4" as E_Ticket
+entity "Invoice4" as E_Invoice
+
+activate Actor
+Actor -> UI_Home : click mua ve
+activate UI_Home
+UI_Home -> UI_Movie : goi
+activate UI_Movie
+
+' --- 1. Lay danh sach phim ---
+UI_Movie -> DAO_Movie : goi
+activate DAO_Movie
+DAO_Movie -> DAO_Movie : getListMovies()
+activate DAO_Movie
+DAO_Movie -> E_Movie : goi
+activate E_Movie
+E_Movie -> E_Movie : Movie4()
+activate E_Movie
+deactivate E_Movie
+E_Movie --> DAO_Movie : tra ve
+deactivate E_Movie
+DAO_Movie --> UI_Movie : tra ve
+deactivate DAO_Movie
+deactivate DAO_Movie
+UI_Movie --> Actor : hien thi
+
+' --- 2. Chon phim & Lay danh sach suat chieu ---
+Actor -> UI_Movie : chon 1 phim
+UI_Movie -> UI_Showtime : goi
+activate UI_Showtime
+UI_Showtime -> DAO_Showtime : goi
+activate DAO_Showtime
+DAO_Showtime -> DAO_Showtime : getListShowtimes4()
+activate DAO_Showtime
+DAO_Showtime -> E_Showtime : goi
+activate E_Showtime
+E_Showtime -> E_Showtime : Showtime4()
+activate E_Showtime
+deactivate E_Showtime
+E_Showtime --> DAO_Showtime : tra ve
+deactivate E_Showtime
+DAO_Showtime --> UI_Showtime : tra ve
+deactivate DAO_Showtime
+deactivate DAO_Showtime
+UI_Showtime --> Actor : hien thi
+
+' --- 3. Chon suat chieu & Lay danh sach ghe ---
+Actor -> UI_Showtime : chon 1 lich chieu
+UI_Showtime -> UI_Seat : goi
+activate UI_Seat
+UI_Seat -> DAO_Seat : goi
+activate DAO_Seat
+DAO_Seat -> DAO_Seat : getListSeats4()
+activate DAO_Seat
+DAO_Seat -> E_Seat : goi
+activate E_Seat
+E_Seat -> E_Seat : Seat4()
+activate E_Seat
+deactivate E_Seat
+E_Seat --> DAO_Seat : tra ve
+deactivate E_Seat
+DAO_Seat --> UI_Seat : tra ve
+deactivate DAO_Seat
+deactivate DAO_Seat
+UI_Seat --> Actor : hien thi
+
+' --- 4. Chon ghe & Xac nhan mua ve ---
+loop lap den khi chon du ghe
+    Actor -> UI_Seat : chon ghe trong
+    UI_Seat --> Actor : hien thi ghe da chon
+end
+Actor -> UI_Seat : nhap ma the (neu co) + click Xac nhan
+UI_Seat -> UI_Pay : goi
+activate UI_Pay
+UI_Pay --> Actor : hien thi
+
+' --- 5. Thanh toan & Luu Hoa don + Ve + Cap nhat Ghe ---
+Actor -> UI_Pay : xac nhan thanh toan
+UI_Pay -> UI_Export : goi
+activate UI_Export
+
+' Dong goi Ticket4
+UI_Export -> E_Ticket : goi
+activate E_Ticket
+E_Ticket -> E_Ticket : setter()
+activate E_Ticket
+deactivate E_Ticket
+E_Ticket --> UI_Export : tra ve
+deactivate E_Ticket
+
+' Dong goi Invoice4 (chua Ticket4)
+UI_Export -> E_Invoice : goi
+activate E_Invoice
+E_Invoice -> E_Invoice : setter()
+activate E_Invoice
+deactivate E_Invoice
+E_Invoice --> UI_Export : tra ve
+deactivate E_Invoice
+
+' Luu Invoice4 (kem Ticket4) vao CSDL
+UI_Export -> DAO_Invoice : goi
+activate DAO_Invoice
+DAO_Invoice -> DAO_Invoice : addInvoice4()
+activate DAO_Invoice
+deactivate DAO_Invoice
+DAO_Invoice --> UI_Export : tra ve
+deactivate DAO_Invoice
+
+' Cap nhat trang thai ghe Seat4
+UI_Export -> DAO_Seat : goi
+activate DAO_Seat
+DAO_Seat -> DAO_Seat : updateSeat4()
+activate DAO_Seat
+deactivate DAO_Seat
+DAO_Seat --> UI_Export : tra ve
+deactivate DAO_Seat
+
+' Hien thi ket qua va quay ve trang chinh
+UI_Export --> Actor : hien thi ve + hoa don
+Actor -> UI_Export : click OK
+UI_Export -> UI_Home : goi
+deactivate UI_Export
+deactivate UI_Pay
+deactivate UI_Seat
+deactivate UI_Showtime
+deactivate UI_Movie
+UI_Home --> Actor : hien thi
+deactivate UI_Home
+deactivate Actor
+@enduml

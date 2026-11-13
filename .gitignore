@@ -1,0 +1,89 @@
+# =========================
+# Java / Maven
+# =========================
+*.class
+*.war
+*.ear
+*.nar
+target/
+build/
+out/
+bin/
+!.mvn/wrapper/maven-wrapper.jar
+
+# Maven release / backup files
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# =========================
+# IDE / Editor
+# =========================
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Eclipse
+.settings/
+.classpath
+.project
+.metadata/
+
+# NetBeans
+nbproject/private/
+nbbuild/
+nbdist/
+dist/
+.nb-gradle/
+build/
+nbactions.xml
+nb-configuration.xml
+
+# VS Code
+.vscode/
+
+# =========================
+# Logs / OS
+# =========================
+*.log
+logs/
+hs_err_pid*
+replay_pid*
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# =========================
+# Cấu hình bí mật
+# =========================
+.env
+.env.*
+!.env.example
+*.local
+config.properties
+db.properties
+
+# =========================
+# Tài liệu / PDF
+# =========================
+# Không đưa PDF (giáo trình, đề mẫu...) lên GitHub
+*.pdf
+
+# File tạm của Microsoft Office
+~$*
+.~lock.*
+
+# =========================
+# Ghi chú
+# =========================
+# Thư mục PTTK/ được giữ lại để đưa tài liệu .docx, .puml, .xlsx lên GitHub.
+# Nếu không muốn public tài liệu, bỏ comment dòng dưới:
+# PTTK/
+*.vpp

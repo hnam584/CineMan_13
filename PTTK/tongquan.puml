@@ -1,0 +1,108 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+
+class Member4 {
+  -username : String
+  -password : String
+  -fullName : String
+  -dateOfBirth : Date
+  -email : String
+  -phone : String
+  -address : String
+}
+class Employee4 { 
+    -position : String 
+    }
+class Manager4
+class SaleStaff4
+class Customer4 {
+     -customerId : String 
+     }
+class LoyalCustomer4 {
+     -loyalCustomerId : String 
+     }
+class MembershipCard4 {
+  -cardId : String
+  -issueDate : Date
+  -status : String
+}
+class CustomerStatistic4 {
+     -numberOfCustomers : integer 
+     }
+class MovieStatistic4 { 
+    -numberOfMovies : integer 
+    }
+class RevenueStatistic4 {
+     -totalRevenue : float 
+     }
+
+class Movie4 {
+  -movieId : String
+  -movieName : String
+  -genre : String
+  -duration : int
+  -description : String
+  +addMovie4(movie : Movie4) : boolean
+  +updateMovie(movie : Movie4) : boolean
+  +deleteMovie(movieId : String) : boolean()
+  +getMovieById(movieId : String) : Movie4()
+  +getAllMovies() : List<Movie4>
+}
+class Showtime4 {
+  -showtimeId : String
+  -startTime : Date
+  -endTime : Date
+  +getShowtimesByMovie(movieId : String) : List<Showtime4>
+  +addShowtime(showtime : Showtime4) : boolean()
+  +updateShowtime(showtime : Showtime4) : boolean()
+}
+class ScreeningRoom4 {
+  -roomId : String
+  -capacity : integer
+  +getRoomById(id : String) : ScreeningRoom4()
+  +addRoom(room : ScreeningRoom4) : boolean()
+}
+class Seat4 {
+  -seatId : String
+  -status : String
+  +getSeatsByRoom(roomId : String) : List<Seat4>
+  +updateSeatStatus(seatId : String, status : String) : boolean
+}
+class Ticket4 {
+  -ticketId : String
+  -price : float
+  +getTicket4(String seatId) : Ticket4
+  +calculatePrice() : float()
+}
+class Invoice4 {
+  -invoiceId : String
+  -totalAmount : float
+  +calculateTotalAmount(tickets : List<Ticket4>) : boolean
+  +createInvoice(invoice : Invoice4) : boolean()
+  +printInvoice() : void()
+}
+
+Employee4 --|> Member4
+Customer4 --|> Member4
+Manager4 --|> Employee4
+SaleStaff4 --|> Employee4
+LoyalCustomer4 --|> Customer4
+CustomerStatistic4 --|> Customer4
+MovieStatistic4 --|> Movie4
+RevenueStatistic4 --|> Invoice4
+
+Customer4 *-- MembershipCard4
+Showtime4 o-- Movie4
+Showtime4 o-- ScreeningRoom4
+ScreeningRoom4 *-- Seat4
+Seat4 o-- Ticket4
+Ticket4 o-- Showtime4
+Invoice4 *-- Ticket4
+Invoice4 o-- SaleStaff4
+Invoice4 o-- Customer4
+
+Manager4 -- Movie4
+Manager4 -- Showtime4
+Manager4 -- ScreeningRoom4
+@enduml

@@ -1,0 +1,100 @@
+@startuml
+hide circle
+skinparam linetype ortho
+
+entity Member4 {
+  * id : integer(10) <<PK>>
+  --
+  username : varchar(255)
+  password : varchar(255)
+  fullName : varchar(255)
+  dateOfBirth : date
+  email : varchar(255)
+  phone : varchar(255)
+  address : varchar(255)
+}
+entity Customer4 {
+  * Member4id : integer(10) <<PK, FK>>
+  --
+  customerId : varchar(255)
+}
+entity LoyalCustomer4 {
+  * Customer4Member4id : integer(10) <<PK, FK>>
+  --
+  loyalCustomerId : varchar(255)
+}
+entity MembershipCard4 {
+  * id : integer(10) <<PK>>
+  --
+  cardId : varchar(255)
+  issueDate : date
+  status : varchar(255)
+  Customer4Member4id : integer(10) <<FK>>
+}
+entity Employee4 {
+  * Member4id : integer(10) <<PK, FK>>
+  --
+  position : varchar(255)
+}
+entity Movie4 {
+  * id : integer(10) <<PK>>
+  --
+  movieId : varchar(255)
+  movieName : varchar(255)
+  description : varchar(255)
+  genre : varchar(255)
+  duration : integer(10)
+}
+entity ScreeningRoom4 {
+  * id : integer(10) <<PK>>
+  --
+  roomId : varchar(255)
+  capacity : integer(10)
+}
+entity Seat4 {
+  * id : integer(10) <<PK>>
+  --
+  seatId : varchar(255)
+  status : varchar(255)
+  ScreeningRoom4id : integer(10) <<FK>>
+}
+entity Showtime4 {
+  * id : integer(10) <<PK>>
+  --
+  startTime : date
+  endTime : date
+  showtimeId : varchar(255)
+  ScreeningRoom4id : integer(10) <<FK>>
+  Movie4id : integer(10) <<FK>>
+}
+entity Ticket4 {
+  * id : integer(10) <<PK>>
+  --
+  ticketId : varchar(255)
+  price : float(10)
+  Seat4id : integer(10) <<FK>>
+  Invoice4id : integer(10) <<FK>>
+  ShowTime4id : integer(10) <<FK>>
+}
+entity Invoice4 {
+  * id : integer(10) <<PK>>
+  --
+  invoiceId : varchar(255)
+  totalAmount : decimal(10, 3)
+  Customer4Member4id : integer(10) <<FK>>
+  Employee4Member4id : integer(10) <<FK>>
+}
+
+Member4 ||--o| Customer4
+Member4 ||--o| Employee4
+Customer4 ||--o| LoyalCustomer4
+Customer4 ||..o{ MembershipCard4
+ScreeningRoom4 ||..o{ Showtime4
+ScreeningRoom4 ||..o{ Seat4
+Movie4 ||..o{ Showtime4
+Showtime4 ||..o{ Ticket4
+Seat4 ||..o{ Ticket4
+Invoice4 ||..o{ Ticket4
+Customer4 ||..o{ Invoice4
+Employee4 ||..o{ Invoice4
+@enduml

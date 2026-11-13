@@ -1,0 +1,24 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam node {
+    BackgroundColor white
+    BorderColor black
+}
+skinparam componentStyle uml2
+
+node "<<device>>\nCineMan HTML Client\n(Client Tier)" as Client {
+    card "Web Browser\n- HTML / CSS / JavaScript\n- JSP Client View:\n  + CinemaInterface4\n  + ManageMovieInterface4\n  + AddMovieInterface4\n  + PurchaseTicketInterface4\n  + ShowtimeInterface4\n  + SeatInterface4\n  + PaymentInterface4\n  + ExportInvoiceAndTicketInterface4" as Browser
+}
+
+node "<<device>>\nCineMan J2EE Server\n(Application / Web Server Tier)" as AppServer {
+    card "Apache Tomcat / J2EE Container\n- Web Server (JSP / Servlets - gói view)\n- Business / Data Access (JavaBeans - gói dao)\n- Entity Classes / EJB (gói model)" as J2EE
+}
+
+node "<<device>>\nCineMan DB Server\n(Database Tier)" as DBServer {
+    card "DBMS (MySQL Server)\n- JDBC net server\n- EJB data source (CineMan Database)" as DBMS
+}
+
+Client "*" -- "1" AppServer : "HTTP, TCP/IP, IIOP"
+AppServer "1" -- "1" DBServer : "JDBC net, TCP/IP"
+@enduml
