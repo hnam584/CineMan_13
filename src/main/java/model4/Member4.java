@@ -2,10 +2,6 @@ package model4;
 
 import java.util.Date;
 
-/**
- * Lớp thực thể Member4 (tblMember4).
- * Các lớp Employee4 và Customer4 kế thừa từ lớp này.
- */
 public class Member4 {
     private int id;
     private String username;
@@ -16,7 +12,6 @@ public class Member4 {
     private String phone;
     private String address;
 
-    /** Thuộc tính không lưu CSDL: vai trò dùng cho phân quyền. */
     private String role;
 
     public Member4() {

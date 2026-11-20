@@ -8,9 +8,6 @@ import java.util.List;
 import model4.Manager4;
 import model4.Movie4;
 
-/**
- * DAO cho lớp thực thể Movie4.
- */
 public class MovieDAO4 extends DAO {
 
     private static final String SELECT_ALL =

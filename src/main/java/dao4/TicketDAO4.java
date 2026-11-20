@@ -7,18 +7,12 @@ import java.util.HashSet;
 import java.util.Set;
 import model4.Ticket4;
 
-/**
- * DAO cho lớp thực thể Ticket4.
- */
 public class TicketDAO4 extends DAO {
 
     public TicketDAO4() {
         super();
     }
 
-    /**
-     * Tập id ghế đã bán cho một suất chiếu.
-     */
     public Set<Integer> getSoldSeatIds4(int idShowtime) {
         Set<Integer> sold = new HashSet<>();
         String sql = "SELECT tblSeat4id FROM tblTicket4 "
@@ -37,17 +31,10 @@ public class TicketDAO4 extends DAO {
         return sold;
     }
 
-    /**
-     * Tính giá vé cơ bản theo giá của suất chiếu.
-     * Ưu đãi thẻ thành viên được áp dụng tại tầng xử lý thanh toán.
-     */
     public float calculatePrice4(float ticketPrice) {
         return ticketPrice;
     }
 
-    /**
-     * Thêm một vé vào hóa đơn.
-     */
     public boolean addTicket4(Ticket4 ticket, int idInvoice) {
         String sql = "INSERT INTO tblTicket4 "
                    + "(price, status, holdUntil, tblSeat4id, tblShowtime4id, tblInvoice4id, tblCustomer4tblMember4id) "

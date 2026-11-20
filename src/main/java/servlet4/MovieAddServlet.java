@@ -11,9 +11,6 @@ import model4.Manager4;
 import model4.Member4;
 import model4.Movie4;
 
-/**
- * Modul 1: nhân viên quản lý thêm phim.
- */
 @WebServlet("/add-movie")
 public class MovieAddServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;

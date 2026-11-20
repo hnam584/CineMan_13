@@ -2,22 +2,16 @@ package model4;
 
 import java.sql.Timestamp;
 
-/**
- * Lớp thực thể Ticket4 (tblTicket4).
- */
 public class Ticket4 {
     private int id;
     private float price;
     private String status;
     private Timestamp holdUntil;
 
-    /** Quan hệ Showtime4 1 - n Ticket4. */
     private Showtime4 showtime;
 
-    /** Quan hệ Seat4 1 - n Ticket4. */
     private Seat4 seat;
 
-    /** Quan hệ Customer4 1 - n Ticket4. */
     private Customer4 customer;
 
     public Ticket4() {

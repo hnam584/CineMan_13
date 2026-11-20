@@ -4,21 +4,15 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Lớp thực thể Invoice4 (tblInvoice4).
- */
 public class Invoice4 {
     private int id;
     private float totalAmount;
     private Timestamp paymentDate;
 
-    /** Quan hệ Invoice4 1 - n Ticket4. */
     private List<Ticket4> tickets = new ArrayList<>();
 
-    /** Quan hệ Customer4 1 - n Invoice4. */
     private Customer4 customer;
 
-    /** Quan hệ SalesStaff4 1 - n Invoice4 (có thể null với hóa đơn online). */
     private SalesStaff4 salesStaff;
 
     public Invoice4() {
@@ -72,7 +66,6 @@ public class Invoice4 {
         this.salesStaff = salesStaff;
     }
 
-    /** Mã hóa đơn hiển thị (sinh từ id, không lưu CSDL). */
     public String getCode() {
         return String.format("HD%06d", id);
     }

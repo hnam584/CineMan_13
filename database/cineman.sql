@@ -1,7 +1,3 @@
--- =========================================================
--- CineMan - Cơ sở dữ liệu MySQL 8.0 (theo ERD pha thiết kế)
--- Chạy file này một lần để tạo database và dữ liệu mẫu.
--- =========================================================
 
 CREATE DATABASE IF NOT EXISTS cineman_db
   CHARACTER SET utf8mb4
@@ -24,9 +20,6 @@ DROP TABLE IF EXISTS tblEmployee4;
 DROP TABLE IF EXISTS tblMember4;
 SET FOREIGN_KEY_CHECKS = 1;
 
--- =========================================================
--- 1. Nhóm người dùng
--- =========================================================
 CREATE TABLE tblMember4 (
     id          INT AUTO_INCREMENT PRIMARY KEY,
     username    VARCHAR(255) NOT NULL UNIQUE,
@@ -83,9 +76,6 @@ CREATE TABLE tblMembershipCard4 (
         ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- =========================================================
--- 2. Phim, phòng chiếu, ghế, lịch chiếu
--- =========================================================
 CREATE TABLE tblMovie4 (
     id                                     INT AUTO_INCREMENT PRIMARY KEY,
     movieName                              VARCHAR(255) NOT NULL,
@@ -131,9 +121,6 @@ CREATE TABLE tblShowtime4 (
         ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- =========================================================
--- 3. Hóa đơn và vé
--- =========================================================
 CREATE TABLE tblInvoice4 (
     id                                     INT AUTO_INCREMENT PRIMARY KEY,
     totalAmount                            FLOAT NOT NULL,
@@ -172,9 +159,6 @@ CREATE TABLE tblTicket4 (
     CONSTRAINT uq_ticket_showtime_seat UNIQUE (tblShowtime4id, tblSeat4id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- =========================================================
--- 4. Dữ liệu mẫu
--- =========================================================
 INSERT INTO tblMember4
     (id, username, password, fullName, dateOfBirth, email, phone, address)
 VALUES
@@ -207,7 +191,6 @@ VALUES
 INSERT INTO tblScreeningRoom4 (id, capacity, tblManager4tblEmployee4tblMember4id)
 VALUES (1, 40, 1), (2, 30, 1);
 
--- Phòng 1: 20 ghế, phòng 2: 10 ghế
 INSERT INTO tblSeat4 (id, status, tblScreeningRoom4id) VALUES
     (1, 'TRONG', 1), (2, 'TRONG', 1), (3, 'TRONG', 1), (4, 'TRONG', 1), (5, 'TRONG', 1),
     (6, 'TRONG', 1), (7, 'TRONG', 1), (8, 'TRONG', 1), (9, 'TRONG', 1), (10, 'TRONG', 1),

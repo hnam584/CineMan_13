@@ -1,16 +1,11 @@
 package model4;
 
-/**
- * Lớp thực thể Seat4 (tblSeat4).
- */
 public class Seat4 {
     private int id;
     private String status;
 
-    /** Quan hệ ScreeningRoom4 1 - n Seat4. */
     private ScreeningRoom4 room;
 
-    /** Nhãn hiển thị (không lưu CSDL), ví dụ A1, A2... */
     private String label;
 
     public Seat4() {

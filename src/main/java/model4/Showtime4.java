@@ -2,19 +2,14 @@ package model4;
 
 import java.sql.Timestamp;
 
-/**
- * Lớp thực thể Showtime4 (tblShowtime4).
- */
 public class Showtime4 {
     private int id;
     private Timestamp startTime;
     private Timestamp endTime;
     private float ticketPrice;
 
-    /** Quan hệ Movie4 1 - n Showtime4. */
     private Movie4 movie;
 
-    /** Quan hệ ScreeningRoom4 1 - n Showtime4. */
     private ScreeningRoom4 room;
 
     public Showtime4() {

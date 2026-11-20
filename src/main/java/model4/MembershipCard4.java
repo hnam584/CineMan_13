@@ -2,15 +2,11 @@ package model4;
 
 import java.sql.Date;
 
-/**
- * Lớp thực thể MembershipCard4 (tblMembershipCard4).
- */
 public class MembershipCard4 {
     private int id;
     private Date issueDate;
     private String status;
 
-    /** Quan hệ SalesStaff4 1 - n MembershipCard4 (có thể null). */
     private SalesStaff4 salesStaff;
 
     public MembershipCard4() {

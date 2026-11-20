@@ -1,8 +1,5 @@
 package model4;
 
-/**
- * Lớp thực thể Movie4 (tblMovie4).
- */
 public class Movie4 {
     private int id;
     private String movieName;
@@ -10,7 +7,6 @@ public class Movie4 {
     private int duration;
     private String description;
 
-    /** Quan hệ Manager4 1 - n Movie4. */
     private Manager4 manager;
 
     public Movie4() {

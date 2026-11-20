@@ -8,18 +8,12 @@ import model4.Manager4;
 import model4.Member4;
 import model4.SalesStaff4;
 
-/**
- * DAO phục vụ đăng nhập (không thuộc phạm vi 2 modul nghiệp vụ).
- */
 public class MemberDAO4 extends DAO {
 
     public MemberDAO4() {
         super();
     }
 
-    /**
-     * Xác thực đăng nhập và trả về đúng lớp con theo vai trò.
-     */
     public Member4 authenticate(String username, String password) {
         String sql =
                 "SELECT m.id, m.username, m.fullName, m.dateOfBirth, m.email, m.phone, m.address, "

@@ -8,9 +8,6 @@ import java.util.List;
 import model4.Manager4;
 import model4.ScreeningRoom4;
 
-/**
- * DAO cho lớp thực thể ScreeningRoom4.
- */
 public class ScreeningRoomDAO4 extends DAO {
 
     public ScreeningRoomDAO4() {

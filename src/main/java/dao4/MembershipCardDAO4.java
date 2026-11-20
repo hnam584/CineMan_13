@@ -6,18 +6,12 @@ import java.sql.ResultSet;
 import model4.MembershipCard4;
 import model4.SalesStaff4;
 
-/**
- * DAO cho lớp thực thể MembershipCard4.
- */
 public class MembershipCardDAO4 extends DAO {
 
     public MembershipCardDAO4() {
         super();
     }
 
-    /**
-     * Kiểm tra thẻ có tồn tại và còn hiệu lực hay không.
-     */
     public boolean checkValid4(int idCard) {
         String sql = "SELECT status FROM tblMembershipCard4 WHERE id = ?";
         try (Connection con = getConnection();

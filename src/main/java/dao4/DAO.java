@@ -5,10 +5,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Properties;
 
-/**
- * Lớp DAO chung: đọc cấu hình và mở kết nối MySQL.
- * Các lớp DAO cụ thể kế thừa lớp này.
- */
 public class DAO {
 
     private static final Properties CONFIG = loadConfig();
@@ -16,9 +12,6 @@ public class DAO {
     public DAO() {
     }
 
-    /**
-     * Mở một kết nối mới. Người gọi chịu trách nhiệm đóng (try-with-resources).
-     */
     protected static Connection getConnection() throws Exception {
         String dbUrl = CONFIG.getProperty("db.url");
         String dbUser = CONFIG.getProperty("db.username");

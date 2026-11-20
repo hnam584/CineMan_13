@@ -12,12 +12,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model4.Member4;
 
-/**
- * Phân quyền theo 2 modul:
- *  - MANAGER  : modul 1 (quản lý phim)
- *  - CUSTOMER : modul 2 (mua vé trực tuyến)
- *  - SALES_STAFF : chỉ vào trang chính (chức năng bán vé tại quầy chưa cài đặt)
- */
 @WebFilter("/*")
 public class AuthFilter implements Filter {
 

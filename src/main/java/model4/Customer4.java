@@ -1,8 +1,5 @@
 package model4;
 
-/**
- * Lớp thực thể Customer4 (tblCustomer4) - kế thừa Member4, giữ mã khách hàng.
- */
 public class Customer4 extends Member4 {
     private String customerId;
 

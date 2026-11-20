@@ -9,18 +9,12 @@ import java.util.List;
 import model4.Invoice4;
 import model4.Ticket4;
 
-/**
- * DAO cho lớp thực thể Invoice4.
- */
 public class InvoiceDAO4 extends DAO {
 
     public InvoiceDAO4() {
         super();
     }
 
-    /**
-     * Tính tổng tiền hóa đơn từ danh sách vé.
-     */
     public float calculateTotalAmount4(List<Ticket4> tickets) {
         float total = 0f;
         if (tickets != null) {
@@ -31,10 +25,6 @@ public class InvoiceDAO4 extends DAO {
         return total;
     }
 
-    /**
-     * Lưu hóa đơn và toàn bộ vé trong cùng một transaction.
-     * Ràng buộc UNIQUE(tblShowtime4id, tblSeat4id) bảo vệ chống đặt trùng ghế.
-     */
     public boolean addInvoice4(Invoice4 invoice) {
         String insertInvoice =
                 "INSERT INTO tblInvoice4 "
@@ -112,9 +102,6 @@ public class InvoiceDAO4 extends DAO {
         return false;
     }
 
-    /**
-     * In vé và hóa đơn (demo: ghi log; giao diện hiển thị nội dung).
-     */
     public void printInvoice4() {
         System.out.println("===> In vé và hóa đơn");
     }

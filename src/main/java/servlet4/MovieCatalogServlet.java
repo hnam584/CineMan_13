@@ -10,9 +10,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import dao4.MovieDAO4;
 import model4.Movie4;
 
-/**
- * Modul 2: danh sách phim đang chiếu cho khách hàng.
- */
 @WebServlet("/movies")
 public class MovieCatalogServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;

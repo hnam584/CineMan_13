@@ -9,9 +9,6 @@ import model4.Movie4;
 import model4.ScreeningRoom4;
 import model4.Showtime4;
 
-/**
- * DAO cho lớp thực thể Showtime4.
- */
 public class ShowtimeDAO4 extends DAO {
 
     private static final String BASE_SELECT =

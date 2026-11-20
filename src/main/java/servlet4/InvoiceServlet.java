@@ -132,7 +132,6 @@ public class InvoiceServlet extends HttpServlet {
             return;
         }
 
-        // Mã xác nhận chỉ dùng được một lần cho đúng suất chiếu và đúng các ghế đã chọn.
         session.removeAttribute("paymentCode");
         session.removeAttribute("paymentShowtimeId");
         session.removeAttribute("paymentSeatIds");
@@ -162,7 +161,7 @@ public class InvoiceServlet extends HttpServlet {
             if (saved) {
                 invoiceDAO.printInvoice4();
             } else {
-                // Có thể ghế vừa bị người khác đặt trong lúc thanh toán (ràng buộc UNIQUE).
+                
                 Set<Integer> soldNow = ticketDAO.getSoldSeatIds4(showtimeId);
                 for (Seat4 seat : selectedSeats) {
                     if (soldNow.contains(seat.getId())) {
