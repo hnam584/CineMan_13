@@ -205,3 +205,23 @@ VALUES
     (1, '2026-11-21 18:00:00', '2026-11-21 20:00:00', 90000, 1, 1),
     (2, '2026-11-21 20:30:00', '2026-11-21 22:00:00', 90000, 1, 2),
     (3, '2026-11-22 18:00:00', '2026-11-22 20:00:00', 80000, 2, 1);
+
+INSERT INTO tblMember4
+    (id, username, password, fullName, dateOfBirth, email, phone, address)
+VALUES
+    (4, 'customer2', '123456', 'Khách hàng B', '2001-02-02',
+        'customer2@cineman.vn', '0900000004', 'Hà Nội'),
+    (5, 'customer3', '123456', 'Khách hàng C', '2002-03-03',
+        'customer3@cineman.vn', '0900000005', 'Hà Nội'),
+    (6, 'customer4', '123456', 'Khách hàng D', '2003-04-04',
+        'customer4@cineman.vn', '0900000006', 'Hà Nội');
+
+INSERT INTO tblCustomer4 (tblMember4id, customerId) VALUES
+    (4, 'C002'),
+    (5, 'C003'),
+    (6, 'C004');
+
+INSERT INTO tblMembershipCard4
+    (id, issueDate, status, tblCustomer4tblMember4id, tblSalesStaff4tblEmployee4tblMember4id)
+VALUES
+    (2, '2026-01-01', 'ACTIVE', 4, 3);

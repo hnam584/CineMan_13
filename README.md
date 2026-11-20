@@ -19,7 +19,10 @@ Công nghệ: Java 17, JSP/Servlet, Maven, MySQL 8.0, Apache Tomcat 10.1.
 Tài khoản demo:
 
 ```text
-manager  / 123456
-customer / 123456
-sales    / 123456
+manager   / 123456
+customer  / 123456
+customer2 / 123456
+customer3 / 123456
+customer4 / 123456
+sales     / 123456
 ```
