@@ -1,5 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<% request.setAttribute("requiredRole", "MANAGER"); %>
+<%@ include file="/WEB-INF/auth.jsp" %>
 <%@ page import="java.util.List,dao4.MovieDAO4,model4.Movie4" %>
 <%
 List<Movie4> movies = new MovieDAO4().getAllMovies4();

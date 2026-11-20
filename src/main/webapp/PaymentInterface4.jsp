@@ -1,6 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<% request.setAttribute("requiredRole", "CUSTOMER"); %>
+<%@ include file="/WEB-INF/auth.jsp" %>
 <%@ page import="java.security.SecureRandom,java.util.ArrayList,java.util.HashSet,java.util.List,java.util.Set,java.util.TreeSet,dao4.MembershipCardDAO4,dao4.SeatDAO4,dao4.ShowtimeDAO4,dao4.TicketDAO4,model4.Seat4,model4.Showtime4" %>
 <fmt:setLocale value="vi_VN"/>
 <%

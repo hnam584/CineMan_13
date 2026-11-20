@@ -1,6 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<% request.setAttribute("requiredRole", "CUSTOMER"); %>
+<%@ include file="/WEB-INF/auth.jsp" %>
 <%@ page import="java.util.List,dao4.MovieDAO4,dao4.ShowtimeDAO4,model4.Movie4,model4.Showtime4" %>
 <fmt:setLocale value="vi_VN"/>
 <%
@@ -28,6 +30,7 @@ request.setAttribute("showtimes", showtimes);
     <style>
         body { font-family: Arial, sans-serif; margin: 30px; }
         .container { border: 2px solid #000; width: 900px; padding: 20px; margin: 0 auto; }
+        .screen-title { border-bottom: 1px solid #000; margin: -20px -20px 18px; padding: 6px 10px; text-align: center; font-size: 16px; }
         table { width: 100%; border-collapse: collapse; text-align: center; }
         table, th, td { border: 1px solid #000; }
         th, td { padding: 10px; }
@@ -40,6 +43,7 @@ request.setAttribute("showtimes", showtimes);
 </head>
 <body>
 <div class="container">
+    <div class="screen-title">Showtime Interface 4</div>
     <h3 style="text-align: center; margin-top: 0;">Lịch chiếu của phim: <c:out value="${movie.movieName}"/></h3>
 
     <c:choose>

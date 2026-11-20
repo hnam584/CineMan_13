@@ -1,6 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<% request.setAttribute("requiredRole", "CUSTOMER"); %>
+<%@ include file="/WEB-INF/auth.jsp" %>
 <%@ page import="java.sql.Timestamp,java.util.ArrayList,java.util.HashSet,java.util.List,java.util.Set,java.util.TreeSet,dao4.InvoiceDAO4,dao4.MembershipCardDAO4,dao4.SeatDAO4,dao4.ShowtimeDAO4,dao4.TicketDAO4,model4.Customer4,model4.Invoice4,model4.Member4,model4.Seat4,model4.Showtime4,model4.Ticket4" %>
 <fmt:setLocale value="vi_VN"/>
 <%
@@ -164,6 +166,13 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
         .bottom-bar { margin-top: 28px; text-align: center; }
         .btn { display: inline-block; border: 1px solid #000; padding: 8px 45px; text-decoration: none; color: #000; background: #fff; cursor: pointer; font-size: 14px; }
         .error { color: #b00000; font-weight: bold; text-align: center; }
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); align-items: center; justify-content: center; }
+        .modal-overlay.show { display: flex; }
+        .modal-box { width: 520px; background: #fff; border: 2px solid #000; }
+        .modal-title { border-bottom: 1px solid #000; padding: 6px 10px; text-align: center; font-size: 16px; }
+        .modal-content { padding: 30px; text-align: center; }
+        .modal-msg { border: 1px solid #000; padding: 12px 10px; margin-bottom: 22px; }
+        .modal-btn { width: 180px; border: 1px solid #000; padding: 8px; background: #fff; cursor: pointer; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -228,11 +237,28 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
                 </table>
 
                 <div class="bottom-bar">
-                    <button type="button" class="btn" onclick="window.print()">In hóa đơn</button>
+                    <button type="button" class="btn" onclick="showSuccess()">In hóa đơn</button>
                 </div>
             </c:otherwise>
         </c:choose>
     </div>
 </div>
+
+<div id="successModal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-title">Notify Success</div>
+        <div class="modal-content">
+            <div class="modal-msg">Mua vé thành công</div>
+            <button type="button" class="modal-btn"
+                    onclick="location.href='${pageContext.request.contextPath}/ListMovieInterface4.jsp'">OK</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showSuccess() {
+        document.getElementById('successModal').classList.add('show');
+    }
+</script>
 </body>
 </html>

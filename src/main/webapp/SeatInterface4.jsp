@@ -1,6 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<% request.setAttribute("requiredRole", "CUSTOMER"); %>
+<%@ include file="/WEB-INF/auth.jsp" %>
 <%@ page import="java.util.List,java.util.Set,dao4.SeatDAO4,dao4.ShowtimeDAO4,dao4.TicketDAO4,model4.Seat4,model4.Showtime4" %>
 <fmt:setLocale value="vi_VN"/>
 <%
@@ -32,6 +34,7 @@ request.setAttribute("seats", seats);
     <style>
         body { font-family: Arial, sans-serif; margin: 30px; }
         .container { border: 2px solid #000; width: 900px; padding: 25px; margin: 0 auto; }
+        .screen-title { border-bottom: 1px solid #000; margin: -25px -25px 18px; padding: 6px 10px; text-align: center; font-size: 16px; }
         h3 { text-align: center; margin-top: 0; }
         .seat-area { display: flex; align-items: flex-start; gap: 40px; margin: 25px 0; }
         .seat-map { display: grid; grid-template-columns: repeat(10, 48px); gap: 8px; }
@@ -55,6 +58,7 @@ request.setAttribute("seats", seats);
 </head>
 <body>
 <div class="container">
+    <div class="screen-title">Seat Interface 4</div>
     <h3>Sơ đồ ghế - Phòng <c:out value="${showtime.room.label}"/> -
         <fmt:formatDate value="${showtime.startTime}" pattern="HH:mm"/></h3>
 

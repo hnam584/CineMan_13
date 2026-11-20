@@ -1,5 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<% request.setAttribute("requiredRole", "CUSTOMER"); %>
+<%@ include file="/WEB-INF/auth.jsp" %>
 <%@ page import="java.util.List,dao4.MovieDAO4,model4.Movie4" %>
 <%
 List<Movie4> movies = new MovieDAO4().getAllMovies4();
@@ -13,6 +15,7 @@ request.setAttribute("movies", movies);
     <style>
         body { font-family: Arial, sans-serif; margin: 30px; }
         .container { border: 2px solid #000; width: 800px; padding: 20px; margin: 0 auto; }
+        .screen-title { border-bottom: 1px solid #000; margin: -20px -20px 18px; padding: 6px 10px; text-align: center; font-size: 16px; }
         .top-bar { display: flex; justify-content: space-between; margin-bottom: 15px; }
         .btn { border: 1px solid #000; padding: 6px 20px; text-decoration: none; color: #000; background: #fff; }
         .btn-yellow { background: #ffff00; font-weight: bold; }
@@ -24,6 +27,7 @@ request.setAttribute("movies", movies);
 </head>
 <body>
 <div class="container">
+    <div class="screen-title">List Movie Interface 4</div>
     <div class="top-bar">
         <span>Xin chào, <c:out value="${sessionScope.member.fullName}"/></span>
         <a href="${pageContext.request.contextPath}/Logout.jsp" class="btn">Đăng xuất</a>
