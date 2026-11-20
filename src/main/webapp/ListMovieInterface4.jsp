@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>1. List Movie Interface 4</title>
+    <title>List Movie Interface 4</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 30px; }
         .container { border: 2px solid #000; width: 800px; padding: 20px; margin: 0 auto; }
@@ -21,15 +21,15 @@
 <body>
 <div class="container">
     <div class="top-bar">
-        <span>Xin chào, Customer A</span>
-        <a href="${pageContext.request.contextPath}/CustomerInterface4.jsp" class="btn">Đăng xuất</a>
+        <span>Xin chào, <c:out value="${sessionScope.member.fullName}"/></span>
+        <a href="${pageContext.request.contextPath}/logout" class="btn">Đăng xuất</a>
     </div>
 
     <h3 style="text-align: center; margin-top: 0;">Danh sách phim đang chiếu</h3>
 
     <c:choose>
         <c:when test="${empty movies}">
-            <p class="empty">Hiện chưa có phim nào trong hệ thống.</p>
+            <p class="empty">Hiện chưa có phim nào có suất chiếu.</p>
         </c:when>
         <c:otherwise>
             <table>
@@ -51,7 +51,7 @@
                             <td>${m.duration} phút</td>
                             <td>
                                 <a class="btn btn-yellow"
-                                   href="${pageContext.request.contextPath}/showtimes?movieId=${m.movieId}">Chọn</a>
+                                   href="${pageContext.request.contextPath}/showtimes?movieId=${m.id}">Chọn</a>
                             </td>
                         </tr>
                     </c:forEach>
@@ -61,7 +61,7 @@
     </c:choose>
 
     <div style="margin-top: 20px; text-align: right;">
-        <a href="${pageContext.request.contextPath}/CustomerInterface4.jsp" class="btn">Quay lại</a>
+        <a href="${pageContext.request.contextPath}/CinemaInterface4.jsp" class="btn">Quay lại</a>
     </div>
 </div>
 </body>

@@ -6,18 +6,20 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import dao4.InvoiceDAO4;
 import dao4.MembershipCardDAO4;
 import dao4.SeatDAO4;
 import dao4.ShowtimeDAO4;
+import dao4.TicketDAO4;
+import model4.Customer4;
 import model4.Invoice4;
-import model4.MembershipCard4;
+import model4.Member4;
 import model4.Seat4;
 import model4.Showtime4;
 import model4.Ticket4;
@@ -31,37 +33,54 @@ public class InvoiceServlet extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
 
-        String showtimeId = request.getParameter("showtimeId");
-        String loyaltyCode = request.getParameter("loyaltyCode");
-        String[] seatIdParams = request.getParameterValues("seatIds");
+        HttpSession session = request.getSession(false);
+        Member4 member = session == null ? null : (Member4) session.getAttribute("member");
+        if (!(member instanceof Customer4)) {
+            response.sendRedirect(request.getContextPath() + "/CinemaInterface4.jsp");
+            return;
+        }
+        Customer4 customer = (Customer4) member;
 
-        if (showtimeId == null || showtimeId.trim().isEmpty()
-                || seatIdParams == null || seatIdParams.length == 0) {
+        int showtimeId;
+        try {
+            showtimeId = Integer.parseInt(request.getParameter("showtimeId"));
+        } catch (Exception e) {
             response.sendRedirect(request.getContextPath() + "/movies");
             return;
         }
 
+        String[] seatIdParams = request.getParameterValues("seatIds");
+        if (seatIdParams == null || seatIdParams.length == 0) {
+            response.sendRedirect(request.getContextPath() + "/seats?showtimeId=" + showtimeId);
+            return;
+        }
+
         ShowtimeDAO4 showtimeDAO = new ShowtimeDAO4();
-        Showtime4 showtime = showtimeDAO.getShowtimeByCode(showtimeId);
+        Showtime4 showtime = showtimeDAO.getShowtimeById4(showtimeId);
         if (showtime == null) {
             response.sendRedirect(request.getContextPath() + "/movies");
             return;
         }
 
+        SeatDAO4 seatDAO = new SeatDAO4();
+        List<Seat4> allSeats = seatDAO.getSeatsByRoom4(showtime.getRoom().getId());
+        TicketDAO4 ticketDAO = new TicketDAO4();
+        Set<Integer> soldSeatIds = ticketDAO.getSoldSeatIds4(showtimeId);
+
         Set<Integer> selectedIds = new HashSet<>();
-        for (String id : seatIdParams) {
-            selectedIds.add(Integer.parseInt(id));
+        for (String value : seatIdParams) {
+            try {
+                selectedIds.add(Integer.parseInt(value));
+            } catch (NumberFormatException ignored) {
+            }
         }
 
-        SeatDAO4 seatDAO = new SeatDAO4();
-        List<Seat4> allSeats = seatDAO.getSeatsByShowtime4(showtimeId);
         List<Seat4> selectedSeats = new ArrayList<>();
         boolean invalidSeat = false;
-
         for (Seat4 seat : allSeats) {
             if (selectedIds.contains(seat.getId())) {
                 selectedSeats.add(seat);
-                if (!seat.isAvailable()) {
+                if (soldSeatIds.contains(seat.getId())) {
                     invalidSeat = true;
                 }
             }
@@ -70,43 +89,90 @@ public class InvoiceServlet extends HttpServlet {
             invalidSeat = true;
         }
 
+        String cardIdText = request.getParameter("cardId");
         boolean appliedDiscount = false;
-        if (!invalidSeat && loyaltyCode != null && !loyaltyCode.trim().isEmpty()) {
-            MembershipCardDAO4 cardDAO = new MembershipCardDAO4();
-            MembershipCard4 card = cardDAO.getByCardId(loyaltyCode.trim());
-            appliedDiscount = card != null && card.isActive();
+        if (cardIdText != null && !cardIdText.trim().isEmpty()) {
+            try {
+                int cardId = Integer.parseInt(cardIdText.trim());
+                MembershipCardDAO4 cardDAO = new MembershipCardDAO4();
+                appliedDiscount = cardDAO.checkValid4(cardId);
+            } catch (NumberFormatException ignored) {
+            }
         }
 
-        double discountRate = appliedDiscount ? 0.10 : 0.0;
-        double unitPrice = showtime.getTicketPrice() * (1 - discountRate);
-        double totalAmount = unitPrice * selectedSeats.size();
+        float unitPrice = ticketDAO.calculatePrice4(showtime.getTicketPrice());
+        if (appliedDiscount) {
+            unitPrice = unitPrice * 0.9f;
+        }
+        float totalAmount = unitPrice * selectedSeats.size();
+
+        String expectedCode = (String) session.getAttribute("paymentCode");
+        Integer paidShowtimeId = (Integer) session.getAttribute("paymentShowtimeId");
+        String paidSeatIds = (String) session.getAttribute("paymentSeatIds");
+        String enteredCode = request.getParameter("confirmCode");
+        String currentSeatIds = new java.util.TreeSet<>(selectedIds).toString();
+
+        boolean validConfirmation = expectedCode != null
+                && enteredCode != null
+                && expectedCode.equals(enteredCode.trim())
+                && paidShowtimeId != null
+                && paidShowtimeId.intValue() == showtimeId
+                && currentSeatIds.equals(paidSeatIds);
+
+        if (!invalidSeat && !validConfirmation) {
+            request.setAttribute("showtime", showtime);
+            request.setAttribute("selectedSeats", selectedSeats);
+            request.setAttribute("cardId", cardIdText == null ? "" : cardIdText.trim());
+            request.setAttribute("appliedDiscount", appliedDiscount);
+            request.setAttribute("unitPrice", unitPrice);
+            request.setAttribute("totalAmount", totalAmount);
+            request.setAttribute("paymentCode", expectedCode);
+            request.setAttribute("codeError", "Mã xác nhận thanh toán không đúng. Vui lòng nhập lại.");
+            request.getRequestDispatcher("/PaymentInterface4.jsp").forward(request, response);
+            return;
+        }
+
+        // Mã xác nhận chỉ dùng được một lần cho đúng suất chiếu và đúng các ghế đã chọn.
+        session.removeAttribute("paymentCode");
+        session.removeAttribute("paymentShowtimeId");
+        session.removeAttribute("paymentSeatIds");
 
         boolean saved = false;
         Invoice4 invoice = null;
 
         if (!invalidSeat) {
-            String suffix = UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase();
             invoice = new Invoice4();
-            invoice.setInvoiceId("HD-" + suffix);
-            invoice.setTotalAmount(totalAmount);
+            invoice.setCustomer(customer);
+            invoice.setSalesStaff(null);
             invoice.setPaymentDate(new Timestamp(System.currentTimeMillis()));
-            invoice.setCustomerMemberId(1);
-            invoice.setEmployeeMemberId(null);
 
-            int index = 1;
             for (Seat4 seat : selectedSeats) {
                 Ticket4 ticket = new Ticket4();
-                ticket.setTicketId("VE-" + suffix + "-" + index++);
                 ticket.setPrice(unitPrice);
-                ticket.setSeatId(seat.getId());
-                ticket.setShowtimeId(showtime.getId());
-                ticket.setSeatCode(seat.getSeatId());
-                ticket.setShowtimeCode(showtime.getShowtimeId());
+                ticket.setStatus("DA_BAN");
+                ticket.setShowtime(showtime);
+                ticket.setSeat(seat);
+                ticket.setCustomer(customer);
                 invoice.getTickets().add(ticket);
             }
 
             InvoiceDAO4 invoiceDAO = new InvoiceDAO4();
+            invoice.setTotalAmount(invoiceDAO.calculateTotalAmount4(invoice.getTickets()));
             saved = invoiceDAO.addInvoice4(invoice);
+            if (saved) {
+                invoiceDAO.printInvoice4();
+            } else {
+                // Có thể ghế vừa bị người khác đặt trong lúc thanh toán (ràng buộc UNIQUE).
+                Set<Integer> soldNow = ticketDAO.getSoldSeatIds4(showtimeId);
+                for (Seat4 seat : selectedSeats) {
+                    if (soldNow.contains(seat.getId())) {
+                        invalidSeat = true;
+                        request.setAttribute("conflict",
+                                "Một hoặc nhiều ghế vừa được người khác đặt. Vui lòng chọn lại ghế.");
+                        break;
+                    }
+                }
+            }
         }
 
         request.setAttribute("showtime", showtime);

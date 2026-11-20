@@ -1,79 +1,81 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<fmt:setLocale value="vi_VN"/>
 <c:if test="${showtime == null}"><c:redirect url="/movies"/></c:if>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>3. Seat Interface 4</title>
+    <title>Seat Interface 4</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 30px; }
-        .container { border: 2px solid #000; width: 850px; padding: 20px; margin: 0 auto; }
-        .screen { background: #ddd; border: 1px solid #000; text-align: center; padding: 8px; margin: 20px 0; }
-        .seat-map { display: grid; grid-template-columns: repeat(10, 1fr); gap: 8px; margin: 20px 0; }
-        .seat { border: 1px solid #000; padding: 10px 4px; text-align: center; cursor: pointer; }
-        .seat.available { background: #fff; }
-        .seat.sold { background: #999; color: #fff; cursor: not-allowed; }
-        .seat input { margin-right: 4px; }
-        .info { margin: 15px 0; }
-        .btn { border: 1px solid #000; padding: 8px 25px; text-decoration: none; color: #000; background: #fff; cursor: pointer; }
-        .btn-yellow { background: #ffff00; font-weight: bold; }
-        .bottom-bar { margin-top: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .legend span { margin-right: 20px; }
+        .container { border: 2px solid #000; width: 900px; padding: 25px; margin: 0 auto; }
+        h3 { text-align: center; margin-top: 0; }
+        .seat-area { display: flex; align-items: flex-start; gap: 40px; margin: 25px 0; }
+        .seat-map { display: grid; grid-template-columns: repeat(10, 48px); gap: 8px; }
+        .seat { position: relative; border: 1px solid #000; height: 34px; line-height: 34px; text-align: center; cursor: pointer; background: #fff; font-size: 13px; user-select: none; }
+        .seat input { position: absolute; opacity: 0; pointer-events: none; }
+        .seat.sold { background: #4d93d9; color: #000; cursor: not-allowed; }
+        .seat.selected { background: #ffff00; font-weight: bold; }
+        .legend { padding-top: 5px; }
+        .legend div { display: flex; align-items: center; margin-bottom: 18px; }
+        .legend .box { width: 70px; height: 30px; border: 1px solid #000; margin-right: 12px; }
+        .legend .free { background: #fff; }
+        .legend .sold { background: #4d93d9; }
+        .legend .chosen { background: #ffff00; }
+        .card-row { text-align: center; margin-top: 10px; }
+        .card-row label { display: block; margin-bottom: 10px; font-size: 15px; }
+        .card-row input { width: 700px; padding: 9px; border: 1px solid #000; }
+        .actions { margin-top: 25px; text-align: center; }
+        .actions .btn { display: block; width: 320px; margin: 0 auto 12px auto; border: 1px solid #000; padding: 10px 0; text-decoration: none; color: #000; background: #fff; cursor: pointer; font-size: 14px; }
+        .actions .btn-yellow { background: #ffff00; font-weight: bold; }
     </style>
 </head>
 <body>
 <div class="container">
-    <h3 style="text-align: center; margin-top: 0;">Sơ đồ ghế - Phòng <c:out value="${showtime.roomId}"/></h3>
-    <div class="info">
-        <b>Phim:</b> <c:out value="${showtime.movieId}"/> &nbsp; | &nbsp;
-        <b>Suất chiếu:</b> <fmt:formatDate value="${showtime.startTime}" pattern="dd/MM/yyyy HH:mm"/> &nbsp; | &nbsp;
-        <b>Giá vé:</b> <fmt:formatNumber value="${showtime.ticketPrice}" pattern="#,###"/> đ
-    </div>
-
-    <div class="screen">MÀN HÌNH</div>
+    <h3>Sơ đồ ghế - Phòng <c:out value="${showtime.room.label}"/> -
+        <fmt:formatDate value="${showtime.startTime}" pattern="HH:mm"/></h3>
 
     <form action="${pageContext.request.contextPath}/payment" method="post" onsubmit="return validateSeats();">
-        <input type="hidden" name="showtimeId" value="${showtime.showtimeId}" />
+        <input type="hidden" name="showtimeId" value="${showtime.id}" />
 
-        <div class="seat-map">
-            <c:forEach var="seat" items="${seats}">
-                <c:choose>
-                    <c:when test="${seat.available}">
-                        <label class="seat available">
-                            <input type="checkbox" name="seatIds" value="${seat.id}" />
-                            <c:out value="${seat.seatId}"/>
-                        </label>
-                    </c:when>
-                    <c:otherwise>
-                        <label class="seat sold">
-                            <input type="checkbox" name="seatIds" value="${seat.id}" disabled />
-                            <c:out value="${seat.seatId}"/>
-                        </label>
-                    </c:otherwise>
-                </c:choose>
-            </c:forEach>
+        <div class="seat-area">
+            <div class="seat-map">
+                <c:forEach var="seat" items="${seats}">
+                    <label class="seat ${seat.available ? '' : 'sold'}">
+                        <input type="checkbox" name="seatIds" value="${seat.id}" ${seat.available ? '' : 'disabled'} />
+                        <c:out value="${seat.label}"/>
+                    </label>
+                </c:forEach>
+            </div>
+
+            <div class="legend">
+                <div><span class="box free"></span> Ghế trống</div>
+                <div><span class="box sold"></span> Đã bán</div>
+                <div><span class="box chosen"></span> Đang chọn</div>
+            </div>
         </div>
 
-        <div class="legend">
-            <span>⬜ Ghế trống</span>
-            <span>⬛ Đã bán</span>
+        <div class="card-row">
+            <label>Mã khách hàng thân thiết (Nếu có)</label>
+            <input type="text" name="cardId" value="" />
         </div>
 
-        <div style="margin-top: 20px;">
-            <label>Mã thẻ thành viên (nếu có): </label>
-            <input type="text" name="loyaltyCode" value="" />
-        </div>
-
-        <div class="bottom-bar">
-            <a class="btn" href="${pageContext.request.contextPath}/showtimes?movieId=${showtime.movieId}">Quay lại</a>
+        <div class="actions">
             <button type="submit" class="btn btn-yellow">Xác nhận mua vé</button>
+            <a class="btn" href="${pageContext.request.contextPath}/showtimes?movieId=${showtime.movie.id}">Quay lại</a>
         </div>
     </form>
 </div>
 
 <script>
+    document.querySelectorAll('.seat input[type="checkbox"]').forEach(function (checkbox) {
+        checkbox.addEventListener('change', function () {
+            checkbox.closest('.seat').classList.toggle('selected', checkbox.checked);
+        });
+    });
+
     function validateSeats() {
         var checked = document.querySelectorAll('input[name="seatIds"]:checked').length;
         if (checked === 0) {

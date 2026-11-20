@@ -1,24 +1,55 @@
 package model4;
 
+/**
+ * Lớp thực thể Seat4 (tblSeat4).
+ */
 public class Seat4 {
     private int id;
-    private String seatId;
     private String status;
-    private String roomId;
 
-    public Seat4() {}
+    /** Quan hệ ScreeningRoom4 1 - n Seat4. */
+    private ScreeningRoom4 room;
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    /** Nhãn hiển thị (không lưu CSDL), ví dụ A1, A2... */
+    private String label;
 
-    public String getSeatId() { return seatId; }
-    public void setSeatId(String seatId) { this.seatId = seatId; }
+    public Seat4() {
+    }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public int getId() {
+        return id;
+    }
 
-    public String getRoomId() { return roomId; }
-    public void setRoomId(String roomId) { this.roomId = roomId; }
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public ScreeningRoom4 getRoom() {
+        return room;
+    }
+
+    public void setRoom(ScreeningRoom4 room) {
+        this.room = room;
+    }
+
+    public String getLabel() {
+        if (label != null && !label.isEmpty()) {
+            return label;
+        }
+        return "G" + id;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
 
     public boolean isAvailable() {
         return "TRONG".equalsIgnoreCase(status);

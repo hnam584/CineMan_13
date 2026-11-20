@@ -1,30 +1,81 @@
 package model4;
 
+import java.sql.Timestamp;
+
+/**
+ * Lớp thực thể Ticket4 (tblTicket4).
+ */
 public class Ticket4 {
-    private String ticketId;
-    private double price;
-    private int seatId;
-    private int showtimeId;
-    private String seatCode;
-    private String showtimeCode;
+    private int id;
+    private float price;
+    private String status;
+    private Timestamp holdUntil;
 
-    public Ticket4() {}
+    /** Quan hệ Showtime4 1 - n Ticket4. */
+    private Showtime4 showtime;
 
-    public String getTicketId() { return ticketId; }
-    public void setTicketId(String ticketId) { this.ticketId = ticketId; }
+    /** Quan hệ Seat4 1 - n Ticket4. */
+    private Seat4 seat;
 
-    public double getPrice() { return price; }
-    public void setPrice(double price) { this.price = price; }
+    /** Quan hệ Customer4 1 - n Ticket4. */
+    private Customer4 customer;
 
-    public int getSeatId() { return seatId; }
-    public void setSeatId(int seatId) { this.seatId = seatId; }
+    public Ticket4() {
+    }
 
-    public int getShowtimeId() { return showtimeId; }
-    public void setShowtimeId(int showtimeId) { this.showtimeId = showtimeId; }
+    public int getId() {
+        return id;
+    }
 
-    public String getSeatCode() { return seatCode; }
-    public void setSeatCode(String seatCode) { this.seatCode = seatCode; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public String getShowtimeCode() { return showtimeCode; }
-    public void setShowtimeCode(String showtimeCode) { this.showtimeCode = showtimeCode; }
+    public float getPrice() {
+        return price;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Timestamp getHoldUntil() {
+        return holdUntil;
+    }
+
+    public void setHoldUntil(Timestamp holdUntil) {
+        this.holdUntil = holdUntil;
+    }
+
+    public Showtime4 getShowtime() {
+        return showtime;
+    }
+
+    public void setShowtime(Showtime4 showtime) {
+        this.showtime = showtime;
+    }
+
+    public Seat4 getSeat() {
+        return seat;
+    }
+
+    public void setSeat(Seat4 seat) {
+        this.seat = seat;
+    }
+
+    public Customer4 getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer4 customer) {
+        this.customer = customer;
+    }
 }

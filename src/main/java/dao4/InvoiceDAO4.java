@@ -1,11 +1,17 @@
 package dao4;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.util.List;
 import model4.Invoice4;
 import model4.Ticket4;
 
+/**
+ * DAO cho lớp thực thể Invoice4.
+ */
 public class InvoiceDAO4 extends DAO {
 
     public InvoiceDAO4() {
@@ -13,72 +19,103 @@ public class InvoiceDAO4 extends DAO {
     }
 
     /**
+     * Tính tổng tiền hóa đơn từ danh sách vé.
+     */
+    public float calculateTotalAmount4(List<Ticket4> tickets) {
+        float total = 0f;
+        if (tickets != null) {
+            for (Ticket4 ticket : tickets) {
+                total += (float) ticket.getPrice();
+            }
+        }
+        return total;
+    }
+
+    /**
      * Lưu hóa đơn và toàn bộ vé trong cùng một transaction.
+     * Ràng buộc UNIQUE(tblShowtime4id, tblSeat4id) bảo vệ chống đặt trùng ghế.
      */
     public boolean addInvoice4(Invoice4 invoice) {
         String insertInvoice =
                 "INSERT INTO tblInvoice4 "
-              + "(invoiceId, totalAmount, paymentDate, Customer4Member4id, Employee4Member4id) "
-              + "VALUES (?, ?, ?, ?, ?)";
+              + "(totalAmount, paymentDate, tblCustomer4tblMember4id, tblSalesStaff4tblEmployee4tblMember4id) "
+              + "VALUES (?, ?, ?, ?)";
         String insertTicket =
                 "INSERT INTO tblTicket4 "
-              + "(ticketId, price, Seat4id, Invoice4id, ShowTime4id) "
-              + "VALUES (?, ?, ?, ?, ?)";
+              + "(price, status, holdUntil, tblSeat4id, tblShowtime4id, tblInvoice4id, tblCustomer4tblMember4id) "
+              + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        try {
-            con.setAutoCommit(false);
-
-            int invoiceDbId;
-            try (PreparedStatement ps = con.prepareStatement(insertInvoice, Statement.RETURN_GENERATED_KEYS)) {
-                ps.setString(1, invoice.getInvoiceId());
-                ps.setDouble(2, invoice.getTotalAmount());
-                ps.setTimestamp(3, invoice.getPaymentDate());
-                ps.setInt(4, invoice.getCustomerMemberId());
-                if (invoice.getEmployeeMemberId() == null) {
-                    ps.setNull(5, java.sql.Types.INTEGER);
-                } else {
-                    ps.setInt(5, invoice.getEmployeeMemberId());
-                }
-                ps.executeUpdate();
-
-                try (ResultSet keys = ps.getGeneratedKeys()) {
-                    if (!keys.next()) {
-                        throw new IllegalStateException("Không lấy được id hóa đơn vừa tạo");
-                    }
-                    invoiceDbId = keys.getInt(1);
-                }
-            }
-
-            try (PreparedStatement ps = con.prepareStatement(insertTicket)) {
-                for (Ticket4 ticket : invoice.getTickets()) {
-                    ps.setString(1, ticket.getTicketId());
-                    ps.setDouble(2, ticket.getPrice());
-                    ps.setInt(3, ticket.getSeatId());
-                    ps.setInt(4, invoiceDbId);
-                    ps.setInt(5, ticket.getShowtimeId());
-                    ps.addBatch();
-                }
-                ps.executeBatch();
-            }
-
-            con.commit();
-            return true;
-        } catch (Exception e) {
-            try {
-                con.rollback();
-            } catch (Exception ignored) {
-            }
-            e.printStackTrace();
+        if (invoice == null || invoice.getCustomer() == null) {
             return false;
-        } finally {
-            try {
-                con.setAutoCommit(true);
-            } catch (Exception ignored) {
-            }
         }
+
+        try (Connection con = getConnection()) {
+            con.setAutoCommit(false);
+            try {
+                Timestamp paymentDate = invoice.getPaymentDate() == null
+                        ? new Timestamp(System.currentTimeMillis())
+                        : invoice.getPaymentDate();
+
+                int invoiceId;
+                try (PreparedStatement ps = con.prepareStatement(insertInvoice, Statement.RETURN_GENERATED_KEYS)) {
+                    ps.setFloat(1, invoice.getTotalAmount());
+                    ps.setTimestamp(2, paymentDate);
+                    ps.setInt(3, invoice.getCustomer().getId());
+                    if (invoice.getSalesStaff() == null) {
+                        ps.setNull(4, java.sql.Types.INTEGER);
+                    } else {
+                        ps.setInt(4, invoice.getSalesStaff().getId());
+                    }
+                    ps.executeUpdate();
+
+                    try (ResultSet keys = ps.getGeneratedKeys()) {
+                        if (!keys.next()) {
+                            throw new IllegalStateException("Không lấy được id hóa đơn vừa tạo");
+                        }
+                        invoiceId = keys.getInt(1);
+                    }
+                }
+
+                try (PreparedStatement ps = con.prepareStatement(insertTicket, Statement.RETURN_GENERATED_KEYS)) {
+                    for (Ticket4 ticket : invoice.getTickets()) {
+                        ps.setFloat(1, ticket.getPrice());
+                        ps.setString(2, ticket.getStatus() == null ? "DA_BAN" : ticket.getStatus());
+                        ps.setTimestamp(3, ticket.getHoldUntil());
+                        ps.setInt(4, ticket.getSeat().getId());
+                        ps.setInt(5, ticket.getShowtime().getId());
+                        ps.setInt(6, invoiceId);
+                        ps.setInt(7, invoice.getCustomer().getId());
+                        ps.executeUpdate();
+
+                        try (ResultSet keys = ps.getGeneratedKeys()) {
+                            if (keys.next()) {
+                                ticket.setId(keys.getInt(1));
+                            }
+                        }
+                    }
+                }
+
+                con.commit();
+                invoice.setId(invoiceId);
+                invoice.setPaymentDate(paymentDate);
+                return true;
+            } catch (Exception e) {
+                con.rollback();
+                e.printStackTrace();
+                return false;
+            } finally {
+                con.setAutoCommit(true);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
-    public boolean createInvoice4(Invoice4 invoice) {
-        return addInvoice4(invoice);
+    /**
+     * In vé và hóa đơn (demo: ghi log; giao diện hiển thị nội dung).
+     */
+    public void printInvoice4() {
+        System.out.println("===> In vé và hóa đơn");
     }
 }

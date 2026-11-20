@@ -5,34 +5,35 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Properties;
 
+/**
+ * Lớp DAO chung: đọc cấu hình và mở kết nối MySQL.
+ * Các lớp DAO cụ thể kế thừa lớp này.
+ */
 public class DAO {
-    protected Connection con;
+
+    private static final Properties CONFIG = loadConfig();
 
     public DAO() {
-        if (con == null) {
-            Properties config = loadConfig();
-            String dbUrl = config.getProperty("db.url");
-            String dbUser = config.getProperty("db.username");
-            String dbPass = config.getProperty("db.password");
-
-            if (dbUrl == null || dbUser == null || dbPass == null) {
-                throw new IllegalStateException(
-                        "Thiếu cấu hình db.url, db.username hoặc db.password trong db.properties");
-            }
-
-            try {
-                Class.forName("com.mysql.cj.jdbc.Driver");
-                con = DriverManager.getConnection(dbUrl, dbUser, dbPass);
-                System.out.println("===> KẾT NỐI MYSQL THÀNH CÔNG!");
-            } catch (Exception e) {
-                System.err.println("===> LỖI KẾT NỐI MYSQL:");
-                e.printStackTrace();
-                throw new RuntimeException("Không thể kết nối đến cơ sở dữ liệu", e);
-            }
-        }
     }
 
-    private Properties loadConfig() {
+    /**
+     * Mở một kết nối mới. Người gọi chịu trách nhiệm đóng (try-with-resources).
+     */
+    protected static Connection getConnection() throws Exception {
+        String dbUrl = CONFIG.getProperty("db.url");
+        String dbUser = CONFIG.getProperty("db.username");
+        String dbPass = CONFIG.getProperty("db.password");
+
+        if (dbUrl == null || dbUser == null || dbPass == null) {
+            throw new IllegalStateException(
+                    "Thiếu cấu hình db.url, db.username hoặc db.password trong db.properties");
+        }
+
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        return DriverManager.getConnection(dbUrl, dbUser, dbPass);
+    }
+
+    private static Properties loadConfig() {
         Properties properties = new Properties();
         try (InputStream input = DAO.class.getClassLoader().getResourceAsStream("db.properties")) {
             if (input == null) {

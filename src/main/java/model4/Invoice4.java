@@ -4,31 +4,76 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Lớp thực thể Invoice4 (tblInvoice4).
+ */
 public class Invoice4 {
-    private String invoiceId;
-    private double totalAmount;
+    private int id;
+    private float totalAmount;
     private Timestamp paymentDate;
-    private int customerMemberId;
-    private Integer employeeMemberId;
+
+    /** Quan hệ Invoice4 1 - n Ticket4. */
     private List<Ticket4> tickets = new ArrayList<>();
 
-    public Invoice4() {}
+    /** Quan hệ Customer4 1 - n Invoice4. */
+    private Customer4 customer;
 
-    public String getInvoiceId() { return invoiceId; }
-    public void setInvoiceId(String invoiceId) { this.invoiceId = invoiceId; }
+    /** Quan hệ SalesStaff4 1 - n Invoice4 (có thể null với hóa đơn online). */
+    private SalesStaff4 salesStaff;
 
-    public double getTotalAmount() { return totalAmount; }
-    public void setTotalAmount(double totalAmount) { this.totalAmount = totalAmount; }
+    public Invoice4() {
+    }
 
-    public Timestamp getPaymentDate() { return paymentDate; }
-    public void setPaymentDate(Timestamp paymentDate) { this.paymentDate = paymentDate; }
+    public int getId() {
+        return id;
+    }
 
-    public int getCustomerMemberId() { return customerMemberId; }
-    public void setCustomerMemberId(int customerMemberId) { this.customerMemberId = customerMemberId; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public Integer getEmployeeMemberId() { return employeeMemberId; }
-    public void setEmployeeMemberId(Integer employeeMemberId) { this.employeeMemberId = employeeMemberId; }
+    public float getTotalAmount() {
+        return totalAmount;
+    }
 
-    public List<Ticket4> getTickets() { return tickets; }
-    public void setTickets(List<Ticket4> tickets) { this.tickets = tickets; }
+    public void setTotalAmount(float totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public Timestamp getPaymentDate() {
+        return paymentDate;
+    }
+
+    public void setPaymentDate(Timestamp paymentDate) {
+        this.paymentDate = paymentDate;
+    }
+
+    public List<Ticket4> getTickets() {
+        return tickets;
+    }
+
+    public void setTickets(List<Ticket4> tickets) {
+        this.tickets = tickets;
+    }
+
+    public Customer4 getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer4 customer) {
+        this.customer = customer;
+    }
+
+    public SalesStaff4 getSalesStaff() {
+        return salesStaff;
+    }
+
+    public void setSalesStaff(SalesStaff4 salesStaff) {
+        this.salesStaff = salesStaff;
+    }
+
+    /** Mã hóa đơn hiển thị (sinh từ id, không lưu CSDL). */
+    public String getCode() {
+        return String.format("HD%06d", id);
+    }
 }

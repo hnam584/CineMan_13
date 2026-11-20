@@ -1,18 +1,20 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<fmt:setLocale value="vi_VN"/>
 <c:if test="${showtime == null}"><c:redirect url="/movies"/></c:if>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>5. Export Invoice Interface 4</title>
+    <title>Export Invoice Interface 4</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 30px; }
         .container { border: 2px solid #000; width: 760px; padding: 20px; margin: 0 auto; }
         table { width: 100%; border-collapse: collapse; margin: 15px 0; }
         table, th, td { border: 1px solid #000; }
         th, td { padding: 10px; text-align: center; }
+        .money { text-align: right; padding-right: 22px; white-space: nowrap; }
         .invoice-info p { margin: 6px 0; }
         .btn { border: 1px solid #000; padding: 8px 25px; text-decoration: none; color: #000; background: #fff; }
         .btn-yellow { background: #ffff00; font-weight: bold; }
@@ -26,9 +28,14 @@
 
     <c:choose>
         <c:when test="${invalidSeat}">
-            <p class="error">Ghế bạn chọn đã được bán hoặc không hợp lệ. Vui lòng chọn lại.</p>
+            <p class="error">
+                <c:choose>
+                    <c:when test="${not empty conflict}"><c:out value="${conflict}"/></c:when>
+                    <c:otherwise>Ghế bạn chọn đã được bán hoặc không hợp lệ. Vui lòng chọn lại.</c:otherwise>
+                </c:choose>
+            </p>
             <div class="bottom-bar">
-                <a class="btn" href="${pageContext.request.contextPath}/seats?showtimeId=${showtime.showtimeId}">Chọn lại ghế</a>
+                <a class="btn" href="${pageContext.request.contextPath}/seats?showtimeId=${showtime.id}">Chọn lại ghế</a>
             </div>
         </c:when>
         <c:when test="${not saved}">
@@ -39,8 +46,8 @@
         </c:when>
         <c:otherwise>
             <div class="invoice-info">
-                <p><b>Mã hóa đơn:</b> <c:out value="${invoice.invoiceId}"/></p>
-                <p><b>Khách hàng:</b> Customer A</p>
+                <p><b>Mã hóa đơn:</b> <c:out value="${invoice.code}"/></p>
+                <p><b>Khách hàng:</b> <c:out value="${invoice.customer.fullName}"/></p>
                 <p><b>Ngày thanh toán:</b>
                     <fmt:formatDate value="${invoice.paymentDate}" pattern="dd/MM/yyyy HH:mm"/>
                 </p>
@@ -63,18 +70,18 @@
                         <th>Phim</th>
                         <th>Suất chiếu</th>
                         <th>Ghế</th>
-                        <th>Giá</th>
+                        <th class="money">Giá</th>
                     </tr>
                 </thead>
                 <tbody>
                     <c:forEach var="ticket" items="${invoice.tickets}" varStatus="loop">
                         <tr>
                             <td>${loop.index + 1}</td>
-                            <td><c:out value="${ticket.ticketId}"/></td>
-                            <td><c:out value="${showtime.movieId}"/></td>
+                            <td>VE${ticket.id}</td>
+                            <td><c:out value="${showtime.movie.movieName}"/></td>
                             <td><fmt:formatDate value="${showtime.startTime}" pattern="dd/MM/yyyy HH:mm"/></td>
-                            <td><c:out value="${ticket.seatCode}"/></td>
-                            <td><fmt:formatNumber value="${ticket.price}" pattern="#,###"/> đ</td>
+                            <td><c:out value="${ticket.seat.label}"/></td>
+                            <td class="money"><fmt:formatNumber value="${ticket.price}" pattern="#,###"/> đ</td>
                         </tr>
                     </c:forEach>
                 </tbody>

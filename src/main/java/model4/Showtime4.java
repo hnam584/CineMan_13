@@ -2,35 +2,69 @@ package model4;
 
 import java.sql.Timestamp;
 
+/**
+ * Lớp thực thể Showtime4 (tblShowtime4).
+ */
 public class Showtime4 {
     private int id;
-    private String showtimeId;
     private Timestamp startTime;
     private Timestamp endTime;
-    private String movieId;
-    private String roomId;
-    private double ticketPrice;
+    private float ticketPrice;
 
-    public Showtime4() {}
+    /** Quan hệ Movie4 1 - n Showtime4. */
+    private Movie4 movie;
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    /** Quan hệ ScreeningRoom4 1 - n Showtime4. */
+    private ScreeningRoom4 room;
 
-    public String getShowtimeId() { return showtimeId; }
-    public void setShowtimeId(String showtimeId) { this.showtimeId = showtimeId; }
+    public Showtime4() {
+    }
 
-    public Timestamp getStartTime() { return startTime; }
-    public void setStartTime(Timestamp startTime) { this.startTime = startTime; }
+    public int getId() {
+        return id;
+    }
 
-    public Timestamp getEndTime() { return endTime; }
-    public void setEndTime(Timestamp endTime) { this.endTime = endTime; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public String getMovieId() { return movieId; }
-    public void setMovieId(String movieId) { this.movieId = movieId; }
+    public Timestamp getStartTime() {
+        return startTime;
+    }
 
-    public String getRoomId() { return roomId; }
-    public void setRoomId(String roomId) { this.roomId = roomId; }
+    public void setStartTime(Timestamp startTime) {
+        this.startTime = startTime;
+    }
 
-    public double getTicketPrice() { return ticketPrice; }
-    public void setTicketPrice(double ticketPrice) { this.ticketPrice = ticketPrice; }
+    public Timestamp getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Timestamp endTime) {
+        this.endTime = endTime;
+    }
+
+    public float getTicketPrice() {
+        return ticketPrice;
+    }
+
+    public void setTicketPrice(float ticketPrice) {
+        this.ticketPrice = ticketPrice;
+    }
+
+    public Movie4 getMovie() {
+        return movie;
+    }
+
+    public void setMovie(Movie4 movie) {
+        this.movie = movie;
+    }
+
+    public ScreeningRoom4 getRoom() {
+        return room;
+    }
+
+    public void setRoom(ScreeningRoom4 room) {
+        this.room = room;
+    }
 }

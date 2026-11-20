@@ -1,18 +1,44 @@
 package model4;
 
+/**
+ * Lớp thực thể ScreeningRoom4 (tblScreeningRoom4).
+ */
 public class ScreeningRoom4 {
     private int id;
-    private String roomId;
     private int capacity;
 
-    public ScreeningRoom4() {}
+    /** Quan hệ Manager4 1 - n ScreeningRoom4. */
+    private Manager4 manager;
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public ScreeningRoom4() {
+    }
 
-    public String getRoomId() { return roomId; }
-    public void setRoomId(String roomId) { this.roomId = roomId; }
+    public int getId() {
+        return id;
+    }
 
-    public int getCapacity() { return capacity; }
-    public void setCapacity(int capacity) { this.capacity = capacity; }
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public Manager4 getManager() {
+        return manager;
+    }
+
+    public void setManager(Manager4 manager) {
+        this.manager = manager;
+    }
+
+    /** Nhãn hiển thị cho phòng chiếu (không lưu CSDL). */
+    public String getLabel() {
+        return "P" + String.format("%02d", id);
+    }
 }

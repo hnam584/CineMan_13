@@ -5,17 +5,18 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>2. Manage Movie Interface 4</title>
+    <title>Manage Movie Interface 4</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 30px; }
         .container { border: 2px solid #000; width: 800px; padding: 20px; margin: 0 auto; }
-        .top-bar { display: flex; justify-content: flex-end; margin-bottom: 15px; gap: 15px; }
-        .btn-tab { border: 1px solid #000; padding: 8px 25px; text-decoration: none; color: #000; }
-        .btn-yellow { background-color: #ffff00; font-weight: bold; }
+        .list-header { position: relative; text-align: center; margin-bottom: 15px; min-height: 36px; }
+        .list-title { font-weight: bold; font-size: 16px; line-height: 36px; }
+        .btn-add { position: absolute; right: 0; top: 0; border: 1px solid #000; padding: 8px 25px; text-decoration: none; color: #000; background: #ffff00; font-weight: bold; }
         table { width: 100%; border-collapse: collapse; text-align: center; }
         table, th, td { border: 1px solid #000; }
         th, td { padding: 10px; }
-        .btn-action { display: inline-block; padding: 4px 12px; background-color: #ffff00; border: 1px solid #000; text-decoration: none; color: #000; }
+        .btn-action { display: inline-block; padding: 4px 12px; border: 1px solid #000; text-decoration: none; color: #000; background: #e0e0e0; }
+        .btn-action.disabled { color: #888; cursor: not-allowed; }
         .bottom-bar { margin-top: 25px; text-align: right; }
         .btn-back { border: 1px solid #000; padding: 6px 30px; text-decoration: none; color: #000; background: #fff; }
         .empty { text-align: center; padding: 20px; }
@@ -23,11 +24,11 @@
 </head>
 <body>
 <div class="container">
-    <h3 style="text-align: center; margin-top: 0;">2. Manage Movie Interface 4</h3>
+    <h3 style="text-align: center; margin-top: 0;">Manage Movie Interface 4</h3>
 
-    <div class="top-bar">
-        <span class="btn-tab">Danh sách phim</span>
-        <a href="${pageContext.request.contextPath}/add-movie" class="btn-tab btn-yellow">Thêm phim</a>
+    <div class="list-header">
+        <span class="list-title">Danh sách phim</span>
+        <a href="${pageContext.request.contextPath}/add-movie" class="btn-add">Thêm phim</a>
     </div>
 
     <c:choose>
@@ -53,8 +54,8 @@
                             <td><c:out value="${m.movieName}"/></td>
                             <td><c:out value="${m.genre}"/></td>
                             <td>${m.duration} phút</td>
-                            <td><a href="#" class="btn-action">Sửa</a></td>
-                            <td><a href="#" class="btn-action">Xóa</a></td>
+                            <td><span class="btn-action disabled" title="Chưa hỗ trợ">Sửa</span></td>
+                            <td><span class="btn-action disabled" title="Chưa hỗ trợ">Xóa</span></td>
                         </tr>
                     </c:forEach>
                 </tbody>

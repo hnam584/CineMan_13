@@ -1,15 +1,19 @@
 package servlet4;
 
 import java.io.IOException;
-import java.util.UUID;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import dao4.MovieDAO4;
+import model4.Manager4;
+import model4.Member4;
 import model4.Movie4;
 
+/**
+ * Modul 1: nhân viên quản lý thêm phim.
+ */
 @WebServlet("/add-movie")
 public class MovieAddServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -48,8 +52,12 @@ public class MovieAddServlet extends HttpServlet {
             return;
         }
 
-        String movieId = "M" + UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase();
-        Movie4 movie = new Movie4(movieId, name.trim(), genre, duration, description);
+        Member4 member = (Member4) request.getSession().getAttribute("member");
+        Movie4 movie = new Movie4(name.trim(), genre, duration, description);
+        if (member instanceof Manager4) {
+            movie.setManager((Manager4) member);
+        }
+
         MovieDAO4 movieDAO = new MovieDAO4();
         boolean added = movieDAO.addMovie4(movie);
 

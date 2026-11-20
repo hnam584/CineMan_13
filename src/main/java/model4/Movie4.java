@@ -1,34 +1,73 @@
 package model4;
 
+/**
+ * Lớp thực thể Movie4 (tblMovie4).
+ */
 public class Movie4 {
-    private String movieId;
+    private int id;
     private String movieName;
     private String genre;
     private int duration;
     private String description;
 
-    public Movie4() {}
+    /** Quan hệ Manager4 1 - n Movie4. */
+    private Manager4 manager;
 
-    public Movie4(String movieId, String movieName, String genre, int duration, String description) {
-        this.movieId = movieId;
+    public Movie4() {
+    }
+
+    public Movie4(String movieName, String genre, int duration, String description) {
         this.movieName = movieName;
         this.genre = genre;
         this.duration = duration;
         this.description = description;
     }
 
-    public String getMovieId() { return movieId; }
-    public void setMovieId(String movieId) { this.movieId = movieId; }
+    public int getId() {
+        return id;
+    }
 
-    public String getMovieName() { return movieName; }
-    public void setMovieName(String movieName) { this.movieName = movieName; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public String getGenre() { return genre; }
-    public void setGenre(String genre) { this.genre = genre; }
+    public String getMovieName() {
+        return movieName;
+    }
 
-    public int getDuration() { return duration; }
-    public void setDuration(int duration) { this.duration = duration; }
+    public void setMovieName(String movieName) {
+        this.movieName = movieName;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Manager4 getManager() {
+        return manager;
+    }
+
+    public void setManager(Manager4 manager) {
+        this.manager = manager;
+    }
 }
