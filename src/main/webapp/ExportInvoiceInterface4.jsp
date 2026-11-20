@@ -172,7 +172,7 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
         .modal-title { border-bottom: 1px solid #000; padding: 6px 10px; text-align: center; font-size: 16px; }
         .modal-content { padding: 30px; text-align: center; }
         .modal-msg { border: 1px solid #000; padding: 12px 10px; margin-bottom: 22px; }
-        .modal-btn { width: 180px; border: 1px solid #000; padding: 8px; background: #fff; cursor: pointer; font-size: 14px; }
+        .modal-btn { width: 180px; border: 1px solid #000; padding: 8px; background: #ffff00; font-weight: bold; cursor: pointer; font-size: 14px; }
     </style>
 </head>
 <body>
