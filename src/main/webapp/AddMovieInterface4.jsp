@@ -1,5 +1,44 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ page import="dao4.MovieDAO4,model4.Manager4,model4.Member4,model4.Movie4" %>
+<%
+request.setCharacterEncoding("UTF-8");
+if ("POST".equalsIgnoreCase(request.getMethod())) {
+    String name = request.getParameter("inName");
+    String genre = request.getParameter("inGenre");
+    String durationText = request.getParameter("inDuration");
+    String description = request.getParameter("inDescription");
+
+    if (name == null || name.trim().isEmpty()) {
+        request.setAttribute("error", "Vui lòng nhập tên phim.");
+    } else {
+        int duration;
+        try {
+            duration = Integer.parseInt(durationText);
+            if (duration <= 0) {
+                throw new NumberFormatException();
+            }
+        } catch (Exception e) {
+            request.setAttribute("error", "Thời lượng phải là số nguyên dương.");
+            duration = 0;
+        }
+
+        if (duration > 0) {
+            Member4 member = (Member4) session.getAttribute("member");
+            Movie4 movie = new Movie4(name.trim(), genre, duration, description);
+            if (member instanceof Manager4) {
+                movie.setManager((Manager4) member);
+            }
+            boolean added = new MovieDAO4().addMovie4(movie);
+            if (added) {
+                request.setAttribute("success", "Thêm phim thành công.");
+            } else {
+                request.setAttribute("error", "Thêm phim thất bại. Vui lòng thử lại.");
+            }
+        }
+    }
+}
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,7 +70,7 @@
         <p class="error"><c:out value="${error}"/></p>
     </c:if>
 
-    <form action="${pageContext.request.contextPath}/add-movie" method="post">
+    <form action="${pageContext.request.contextPath}/AddMovieInterface4.jsp" method="post">
         <div class="form-group">
             <label>Tên phim</label>
             <input type="text" id="inName" name="inName" required />
@@ -51,7 +90,7 @@
         </div>
         <div class="btn-group">
             <input type="submit" id="btnAdd" value="Thêm" class="btn" disabled />
-            <a href="${pageContext.request.contextPath}/manage-movies" class="btn btn-yellow">Quay lại</a>
+            <a href="${pageContext.request.contextPath}/ManageMovieInterface4.jsp" class="btn btn-yellow">Quay lại</a>
         </div>
     </form>
 
@@ -60,7 +99,7 @@
             <div class="modal-box">
                 <h4 style="margin-top: 0;">Notify Success</h4>
                 <div class="modal-msg"><c:out value="${success}"/></div>
-                <a href="${pageContext.request.contextPath}/manage-movies" class="btn btn-yellow" style="display: inline-block;">OK</a>
+                <a href="${pageContext.request.contextPath}/ManageMovieInterface4.jsp" class="btn btn-yellow" style="display: inline-block;">OK</a>
             </div>
         </div>
     </c:if>

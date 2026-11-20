@@ -1,6 +1,10 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<c:if test="${movies == null}"><c:redirect url="/movies"/></c:if>
+<%@ page import="java.util.List,dao4.MovieDAO4,model4.Movie4" %>
+<%
+List<Movie4> movies = new MovieDAO4().getAllMovies4();
+request.setAttribute("movies", movies);
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,7 +26,7 @@
 <div class="container">
     <div class="top-bar">
         <span>Xin chào, <c:out value="${sessionScope.member.fullName}"/></span>
-        <a href="${pageContext.request.contextPath}/logout" class="btn">Đăng xuất</a>
+        <a href="${pageContext.request.contextPath}/Logout.jsp" class="btn">Đăng xuất</a>
     </div>
 
     <h3 style="text-align: center; margin-top: 0;">Danh sách phim đang chiếu</h3>
@@ -51,7 +55,7 @@
                             <td>${m.duration} phút</td>
                             <td>
                                 <a class="btn btn-yellow"
-                                   href="${pageContext.request.contextPath}/showtimes?movieId=${m.id}">Chọn</a>
+                                   href="${pageContext.request.contextPath}/ShowtimeInterface4.jsp?movieId=${m.id}">Chọn</a>
                             </td>
                         </tr>
                     </c:forEach>

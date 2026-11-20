@@ -1,8 +1,25 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ page import="java.util.List,dao4.MovieDAO4,dao4.ShowtimeDAO4,model4.Movie4,model4.Showtime4" %>
 <fmt:setLocale value="vi_VN"/>
-<c:if test="${showtimes == null}"><c:redirect url="/movies"/></c:if>
+<%
+int movieId = 0;
+try {
+    movieId = Integer.parseInt(request.getParameter("movieId"));
+} catch (Exception e) {
+    response.sendRedirect(request.getContextPath() + "/ListMovieInterface4.jsp");
+    return;
+}
+Movie4 movie = new MovieDAO4().getMovieById4(movieId);
+if (movie == null) {
+    response.sendRedirect(request.getContextPath() + "/ListMovieInterface4.jsp");
+    return;
+}
+List<Showtime4> showtimes = new ShowtimeDAO4().getShowtimesByMovie4(movieId);
+request.setAttribute("movie", movie);
+request.setAttribute("showtimes", showtimes);
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -53,7 +70,7 @@
                             <td class="money"><fmt:formatNumber value="${s.ticketPrice}" pattern="#,###"/> đ</td>
                             <td>
                                 <a class="btn btn-yellow"
-                                   href="${pageContext.request.contextPath}/seats?showtimeId=${s.id}">Chọn</a>
+                                   href="${pageContext.request.contextPath}/SeatInterface4.jsp?showtimeId=${s.id}">Chọn</a>
                             </td>
                         </tr>
                     </c:forEach>
@@ -63,7 +80,7 @@
     </c:choose>
 
     <div class="bottom-bar">
-        <a href="${pageContext.request.contextPath}/movies" class="btn">Quay lại</a>
+        <a href="${pageContext.request.contextPath}/ListMovieInterface4.jsp" class="btn">Quay lại</a>
     </div>
 </div>
 </body>

@@ -1,8 +1,29 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ page import="java.util.List,java.util.Set,dao4.SeatDAO4,dao4.ShowtimeDAO4,dao4.TicketDAO4,model4.Seat4,model4.Showtime4" %>
 <fmt:setLocale value="vi_VN"/>
-<c:if test="${showtime == null}"><c:redirect url="/movies"/></c:if>
+<%
+int showtimeId = 0;
+try {
+    showtimeId = Integer.parseInt(request.getParameter("showtimeId"));
+} catch (Exception e) {
+    response.sendRedirect(request.getContextPath() + "/ListMovieInterface4.jsp");
+    return;
+}
+Showtime4 showtime = new ShowtimeDAO4().getShowtimeById4(showtimeId);
+if (showtime == null) {
+    response.sendRedirect(request.getContextPath() + "/ListMovieInterface4.jsp");
+    return;
+}
+List<Seat4> seats = new SeatDAO4().getSeatsByRoom4(showtime.getRoom().getId());
+Set<Integer> soldSeatIds = new TicketDAO4().getSoldSeatIds4(showtimeId);
+for (Seat4 seat : seats) {
+    seat.setStatus(soldSeatIds.contains(seat.getId()) ? "DA_BAN" : "TRONG");
+}
+request.setAttribute("showtime", showtime);
+request.setAttribute("seats", seats);
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,7 +58,7 @@
     <h3>Sơ đồ ghế - Phòng <c:out value="${showtime.room.label}"/> -
         <fmt:formatDate value="${showtime.startTime}" pattern="HH:mm"/></h3>
 
-    <form action="${pageContext.request.contextPath}/payment" method="post" onsubmit="return validateSeats();">
+    <form action="${pageContext.request.contextPath}/PaymentInterface4.jsp" method="post" onsubmit="return validateSeats();">
         <input type="hidden" name="showtimeId" value="${showtime.id}" />
 
         <div class="seat-area">
@@ -64,7 +85,7 @@
 
         <div class="actions">
             <button type="submit" class="btn btn-yellow">Xác nhận mua vé</button>
-            <a class="btn" href="${pageContext.request.contextPath}/showtimes?movieId=${showtime.movie.id}">Quay lại</a>
+            <a class="btn" href="${pageContext.request.contextPath}/ShowtimeInterface4.jsp?movieId=${showtime.movie.id}">Quay lại</a>
         </div>
     </form>
 </div>

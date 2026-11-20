@@ -1,5 +1,27 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ page import="dao4.MemberDAO4,model4.Member4" %>
+<%
+request.setCharacterEncoding("UTF-8");
+if ("POST".equalsIgnoreCase(request.getMethod())) {
+    String username = request.getParameter("username");
+    String password = request.getParameter("password");
+    if (username == null || username.trim().isEmpty()
+            || password == null || password.isEmpty()) {
+        request.setAttribute("error", "Vui lòng nhập tên đăng nhập và mật khẩu.");
+    } else {
+        Member4 member = new MemberDAO4().authenticate(username.trim(), password);
+        if (member == null) {
+            request.setAttribute("error", "Tên đăng nhập hoặc mật khẩu không đúng.");
+        } else {
+            session.setAttribute("member", member);
+            session.setMaxInactiveInterval(30 * 60);
+            response.sendRedirect(request.getContextPath() + "/CinemaInterface4.jsp");
+            return;
+        }
+    }
+}
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,7 +47,7 @@
     <c:if test="${not empty error}">
         <div class="error"><c:out value="${error}"/></div>
     </c:if>
-    <form action="${pageContext.request.contextPath}/login" method="post">
+    <form action="${pageContext.request.contextPath}/LoginInterface4.jsp" method="post">
         <div class="form-group">
             <label>Tên đăng nhập</label>
             <input type="text" name="username" required autofocus />

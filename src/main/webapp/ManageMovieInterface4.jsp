@@ -1,6 +1,10 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<c:if test="${movies == null}"><c:redirect url="/manage-movies"/></c:if>
+<%@ page import="java.util.List,dao4.MovieDAO4,model4.Movie4" %>
+<%
+List<Movie4> movies = new MovieDAO4().getAllMovies4();
+request.setAttribute("movies", movies);
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -28,7 +32,7 @@
 
     <div class="list-header">
         <span class="list-title">Danh sách phim</span>
-        <a href="${pageContext.request.contextPath}/add-movie" class="btn-add">Thêm phim</a>
+        <a href="${pageContext.request.contextPath}/AddMovieInterface4.jsp" class="btn-add">Thêm phim</a>
     </div>
 
     <c:choose>

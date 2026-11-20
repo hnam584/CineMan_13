@@ -7,7 +7,7 @@ Hệ thống quản lý rạp chiếu phim CineMan, gồm 2 module:
 - Quản lý phim: thêm phim, hiển thị danh sách phim.
 - Mua vé trực tuyến: chọn phim, suất chiếu, ghế, thanh toán và xuất hóa đơn.
 
-Công nghệ: Java 17, JSP/Servlet, Maven, MySQL 8.0, Apache Tomcat 10.1.
+Công nghệ: Java 17, JSP, Maven, MySQL 8.0, Apache Tomcat 10.1.
 
 ## Chạy dự án
 

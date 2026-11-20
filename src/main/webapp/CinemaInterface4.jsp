@@ -26,7 +26,7 @@
     <h3 style="text-align: center; margin-top: 0;">Cinema Interface 4</h3>
     <div class="header">
         <span class="header-btn">Xin chào, <c:out value="${member.fullName}"/> (<c:out value="${member.roleLabel}"/>)</span>
-        <a href="${pageContext.request.contextPath}/logout" class="header-btn">Đăng xuất</a>
+        <a href="${pageContext.request.contextPath}/Logout.jsp" class="header-btn">Đăng xuất</a>
     </div>
 
     <c:choose>
@@ -34,7 +34,7 @@
             <div class="main-layout">
                 <div class="sidebar">
                     <span class="sidebar-btn disabled">Quản lí lịch chiếu</span>
-                    <a href="${pageContext.request.contextPath}/manage-movies" class="sidebar-btn active">Quản lí phim</a>
+                    <a href="${pageContext.request.contextPath}/ManageMovieInterface4.jsp" class="sidebar-btn active">Quản lí phim</a>
                     <span class="sidebar-btn disabled">Quản lí phòng chiếu</span>
                     <span class="sidebar-btn disabled">Thống kê</span>
                 </div>
@@ -47,7 +47,7 @@
         <c:when test="${member.role == 'CUSTOMER'}">
             <div class="main-layout">
                 <div class="sidebar">
-                    <a href="${pageContext.request.contextPath}/movies" class="sidebar-btn active">Mua vé trực tuyến</a>
+                    <a href="${pageContext.request.contextPath}/ListMovieInterface4.jsp" class="sidebar-btn active">Mua vé trực tuyến</a>
                     <span class="sidebar-btn disabled">Đăng kí thành viên</span>
                     <span class="sidebar-btn disabled">Tìm kiếm</span>
                 </div>

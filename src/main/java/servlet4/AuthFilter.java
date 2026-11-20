@@ -16,9 +16,8 @@ import model4.Member4;
 public class AuthFilter implements Filter {
 
     private static boolean isPublic(String path) {
-        return path.equals("/login")
-                || path.equals("/logout")
-                || path.equals("/LoginInterface4.jsp")
+        return path.equals("/LoginInterface4.jsp")
+                || path.equals("/Logout.jsp")
                 || path.equals("/index.jsp")
                 || path.equals("/favicon.ico")
                 || path.isEmpty()
@@ -26,19 +25,12 @@ public class AuthFilter implements Filter {
     }
 
     private static boolean isManagerPath(String path) {
-        return path.equals("/manage-movies")
-                || path.equals("/add-movie")
-                || path.equals("/ManageMovieInterface4.jsp")
+        return path.equals("/ManageMovieInterface4.jsp")
                 || path.equals("/AddMovieInterface4.jsp");
     }
 
     private static boolean isCustomerPath(String path) {
-        return path.equals("/movies")
-                || path.equals("/showtimes")
-                || path.equals("/seats")
-                || path.equals("/payment")
-                || path.equals("/invoice")
-                || path.equals("/ListMovieInterface4.jsp")
+        return path.equals("/ListMovieInterface4.jsp")
                 || path.equals("/ShowtimeInterface4.jsp")
                 || path.equals("/SeatInterface4.jsp")
                 || path.equals("/PaymentInterface4.jsp")
@@ -62,7 +54,7 @@ public class AuthFilter implements Filter {
         Member4 member = session == null ? null : (Member4) session.getAttribute("member");
 
         if (member == null) {
-            resp.sendRedirect(req.getContextPath() + "/login");
+            resp.sendRedirect(req.getContextPath() + "/LoginInterface4.jsp");
             return;
         }
 

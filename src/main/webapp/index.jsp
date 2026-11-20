@@ -5,6 +5,6 @@
         <c:redirect url="/CinemaInterface4.jsp"/>
     </c:when>
     <c:otherwise>
-        <c:redirect url="/login"/>
+        <c:redirect url="/LoginInterface4.jsp"/>
     </c:otherwise>
 </c:choose>
